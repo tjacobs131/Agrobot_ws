@@ -15,6 +15,7 @@ data_files.append(('share/' + package_name + '/protos', ['protos/PlanterBox.prot
 data_files.append((os.path.join('share', package_name), glob('launch/*.launch_sim.py')))
 data_files.append(('share/' + package_name + '/resource', ['resource/soil_texture.jpg']))
 data_files.append(('share/' + package_name, ['package.xml']))
+data_files.append(('share/' + package_name + '/resource', ['resource/weights/best.pt']))
 
 setup(
     name=package_name,
@@ -37,7 +38,7 @@ setup(
         'console_scripts': [
             'simulation_controller_node = agrobot_pkg.simulation_controller_node:main',
             'movement_controller_node = agrobot_pkg.movement_controller_node:main',
-            'vision_processing_node = agrobot_pkg.vision_processing_node:detect_object',
+            'vision_processing_node = agrobot_pkg.vision_processing_node:main',
             'subscribe_test = agrobot_pkg.subscribe_test:subscribe_to_crop_info',
         ],
     },
