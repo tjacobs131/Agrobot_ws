@@ -1,0 +1,44 @@
+[0.774s] Invoking command in '/home/tjacobs/ros2_ws/src/Agrobot': PYTHONPATH=/home/tjacobs/ros2_ws/build/agrobot_pkg/prefix_override:/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/agrobot_pkg build --build-base /home/tjacobs/ros2_ws/build/agrobot_pkg/build install --record /home/tjacobs/ros2_ws/build/agrobot_pkg/install.log --single-version-externally-managed
+[1.017s] running egg_info
+[1.018s] writing ../../build/agrobot_pkg/agrobot_pkg.egg-info/PKG-INFO
+[1.019s] writing dependency_links to ../../build/agrobot_pkg/agrobot_pkg.egg-info/dependency_links.txt
+[1.019s] writing entry points to ../../build/agrobot_pkg/agrobot_pkg.egg-info/entry_points.txt
+[1.019s] writing requirements to ../../build/agrobot_pkg/agrobot_pkg.egg-info/requires.txt
+[1.019s] writing top-level names to ../../build/agrobot_pkg/agrobot_pkg.egg-info/top_level.txt
+[1.021s] reading manifest file '../../build/agrobot_pkg/agrobot_pkg.egg-info/SOURCES.txt'
+[1.021s] writing manifest file '../../build/agrobot_pkg/agrobot_pkg.egg-info/SOURCES.txt'
+[1.022s] running build
+[1.022s] running build_py
+[1.022s] copying agrobot_pkg/subscribe_test.py -> /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg
+[1.022s] copying agrobot_pkg/simulation_controller_node.py -> /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg
+[1.022s] copying agrobot_pkg/vision_controller_node.py -> /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg
+[1.022s] copying agrobot_pkg/simulation_vision_controller.py -> /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg
+[1.023s] copying agrobot_pkg/vision_processing_node.py -> /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg
+[1.024s] copying agrobot_pkg/movement_controller_node.py -> /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg
+[1.024s] running install
+[1.024s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[1.024s]   warnings.warn(
+[1.024s] running install_lib
+[1.025s] copying /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg/subscribe_test.py -> /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg
+[1.025s] copying /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg/simulation_controller_node.py -> /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg
+[1.026s] copying /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg/vision_controller_node.py -> /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg
+[1.026s] copying /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg/simulation_vision_controller.py -> /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg
+[1.027s] copying /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg/vision_processing_node.py -> /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg
+[1.027s] copying /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg/movement_controller_node.py -> /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg
+[1.028s] byte-compiling /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg/subscribe_test.py to subscribe_test.cpython-310.pyc
+[1.028s] byte-compiling /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg/simulation_controller_node.py to simulation_controller_node.cpython-310.pyc
+[1.030s] byte-compiling /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg/vision_controller_node.py to vision_controller_node.cpython-310.pyc
+[1.030s] byte-compiling /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg/simulation_vision_controller.py to simulation_vision_controller.cpython-310.pyc
+[1.031s] byte-compiling /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg/vision_processing_node.py to vision_processing_node.cpython-310.pyc
+[1.031s] byte-compiling /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg/movement_controller_node.py to movement_controller_node.cpython-310.pyc
+[1.033s] running install_data
+[1.033s] running install_egg_info
+[1.035s] removing '/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg-0.0.0-py3.10.egg-info' (and everything under it)
+[1.035s] Copying ../../build/agrobot_pkg/agrobot_pkg.egg-info to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg-0.0.0-py3.10.egg-info
+[1.036s] running install_scripts
+[1.056s] Installing movement_controller_node script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg
+[1.056s] Installing simulation_controller_node script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg
+[1.056s] Installing subscribe_test script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg
+[1.056s] Installing vision_processing_node script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg
+[1.057s] writing list of installed files to '/home/tjacobs/ros2_ws/build/agrobot_pkg/install.log'
+[1.083s] Invoked command in '/home/tjacobs/ros2_ws/src/Agrobot' returned '0': PYTHONPATH=/home/tjacobs/ros2_ws/build/agrobot_pkg/prefix_override:/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/agrobot_pkg build --build-base /home/tjacobs/ros2_ws/build/agrobot_pkg/build install --record /home/tjacobs/ros2_ws/build/agrobot_pkg/install.log --single-version-externally-managed

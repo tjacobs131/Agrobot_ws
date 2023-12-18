@@ -1,0 +1,25 @@
+[0.650s] Invoking command in '/home/tjacobs/ros2_ws/src/agrobot_pkg': PYTHONPATH=/home/tjacobs/ros2_ws/build/agrobot_pkg/prefix_override:/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/agrobot_pkg build --build-base /home/tjacobs/ros2_ws/build/agrobot_pkg/build install --record /home/tjacobs/ros2_ws/build/agrobot_pkg/install.log --single-version-externally-managed
+[0.857s] running egg_info
+[0.858s] writing ../../build/agrobot_pkg/agrobot_pkg.egg-info/PKG-INFO
+[0.858s] writing dependency_links to ../../build/agrobot_pkg/agrobot_pkg.egg-info/dependency_links.txt
+[0.858s] writing entry points to ../../build/agrobot_pkg/agrobot_pkg.egg-info/entry_points.txt
+[0.858s] writing requirements to ../../build/agrobot_pkg/agrobot_pkg.egg-info/requires.txt
+[0.858s] writing top-level names to ../../build/agrobot_pkg/agrobot_pkg.egg-info/top_level.txt
+[0.860s] reading manifest file '../../build/agrobot_pkg/agrobot_pkg.egg-info/SOURCES.txt'
+[0.860s] writing manifest file '../../build/agrobot_pkg/agrobot_pkg.egg-info/SOURCES.txt'
+[0.860s] running build
+[0.861s] running build_py
+[0.861s] running install
+[0.861s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[0.861s]   warnings.warn(
+[0.861s] running install_lib
+[0.862s] running install_data
+[0.863s] copying protos/PlanterBox.proto -> /home/tjacobs/ros2_ws/install/agrobot_pkg/share/agrobot_pkg/protos
+[0.863s] running install_egg_info
+[0.864s] removing '/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg-0.0.0-py3.10.egg-info' (and everything under it)
+[0.865s] Copying ../../build/agrobot_pkg/agrobot_pkg.egg-info to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg-0.0.0-py3.10.egg-info
+[0.865s] running install_scripts
+[0.882s] Installing movement_controller_node script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg
+[0.882s] Installing simulation_controller_node script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg
+[0.882s] writing list of installed files to '/home/tjacobs/ros2_ws/build/agrobot_pkg/install.log'
+[0.900s] Invoked command in '/home/tjacobs/ros2_ws/src/agrobot_pkg' returned '0': PYTHONPATH=/home/tjacobs/ros2_ws/build/agrobot_pkg/prefix_override:/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/agrobot_pkg build --build-base /home/tjacobs/ros2_ws/build/agrobot_pkg/build install --record /home/tjacobs/ros2_ws/build/agrobot_pkg/install.log --single-version-externally-managed

@@ -1,0 +1,24 @@
+[0.498s] Invoking command in '/home/tjacobs/ros2_ws/build/agrobot_pkg': PYTHONPATH=/home/tjacobs/ros2_ws/build/agrobot_pkg/prefix_override:/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/tjacobs/ros2_ws/build/agrobot_pkg/build --no-deps install_data
+[0.687s] running develop
+[0.688s] /usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+[0.688s]   warnings.warn(
+[0.689s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[0.689s]   warnings.warn(
+[0.818s] running egg_info
+[0.818s] writing agrobot_pkg.egg-info/PKG-INFO
+[0.818s] writing dependency_links to agrobot_pkg.egg-info/dependency_links.txt
+[0.818s] writing entry points to agrobot_pkg.egg-info/entry_points.txt
+[0.818s] writing requirements to agrobot_pkg.egg-info/requires.txt
+[0.818s] writing top-level names to agrobot_pkg.egg-info/top_level.txt
+[0.820s] reading manifest file 'agrobot_pkg.egg-info/SOURCES.txt'
+[0.820s] writing manifest file 'agrobot_pkg.egg-info/SOURCES.txt'
+[0.821s] running build_ext
+[0.821s] Creating /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot-pkg.egg-link (link to .)
+[0.822s] Installing camera_data script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg
+[0.822s] Installing camera_processing script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg
+[0.822s] Installing movement_controller script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg
+[0.822s] Installing movement_driver script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg
+[0.823s] 
+[0.823s] Installed /home/tjacobs/ros2_ws/build/agrobot_pkg
+[0.823s] running install_data
+[0.845s] Invoked command in '/home/tjacobs/ros2_ws/build/agrobot_pkg' returned '0': PYTHONPATH=/home/tjacobs/ros2_ws/build/agrobot_pkg/prefix_override:/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/tjacobs/ros2_ws/build/agrobot_pkg/build --no-deps install_data

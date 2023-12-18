@@ -1,0 +1,94 @@
+[0.000000] (-) TimerEvent: {}
+[0.000360] (-) JobUnselected: {'identifier': 'agrobot_pkg'}
+[0.000419] (agrobot_msgs) JobQueued: {'identifier': 'agrobot_msgs', 'dependencies': OrderedDict()}
+[0.001063] (agrobot_msgs) JobStarted: {'identifier': 'agrobot_msgs'}
+[0.057005] (agrobot_msgs) JobProgress: {'identifier': 'agrobot_msgs', 'progress': 'cmake'}
+[0.058010] (agrobot_msgs) JobProgress: {'identifier': 'agrobot_msgs', 'progress': 'build'}
+[0.058065] (agrobot_msgs) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/tjacobs/ros2_ws/build/agrobot_msgs', '--', '-j8', '-l8'], 'cwd': '/home/tjacobs/ros2_ws/build/agrobot_msgs', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'tjacobs'), ('LC_TIME', 'nl_NL.UTF-8'), ('XDG_SESSION_TYPE', 'wayland'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/tjacobs/ros2_ws/install/agrobot_msgs/lib:/snap/webots/current/usr/share/webots/lib/controller:/opt/ros/iron/opt/rviz_ogre_vendor/lib:/opt/ros/iron/lib/x86_64-linux-gnu:/opt/ros/iron/lib'), ('HOME', '/home/tjacobs'), ('OLDPWD', '/home/tjacobs/ros2_ws/src'), ('DESKTOP_SESSION', 'ubuntu'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('LC_MONETARY', 'nl_NL.UTF-8'), ('SYSTEMD_EXEC_PID', '1658'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('IM_CONFIG_PHASE', '1'), ('WAYLAND_DISPLAY', 'wayland-0'), ('COLCON_PREFIX_PATH', '/home/tjacobs/ros2_ws/install'), ('ROS_DISTRO', 'iron'), ('LOGNAME', 'tjacobs'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'tjacobs'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('PATH', '/opt/ros/iron/bin:/home/tjacobs/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/tjacobs/.local/bin'), ('SESSION_MANAGER', 'local/tjacobs-Aspire-A315-55G:@/tmp/.ICE-unix/1635,unix/tjacobs-Aspire-A315-55G:/tmp/.ICE-unix/1635'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'nl_NL.UTF-8'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/2188d92a_f1b5_442e_b8bf_0f0b7a3217b2'), ('GNOME_SETUP_DISPLAY', ':1'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('LC_TELEPHONE', 'nl_NL.UTF-8'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/.mutter-Xwaylandauth.ZJBBF2'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.361'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('ROS_DOMAIN_ID', '123'), ('AMENT_PREFIX_PATH', '/home/tjacobs/ros2_ws/install/my_package:/home/tjacobs/ros2_ws/install/agrobot_pkg:/home/tjacobs/ros2_ws/install/agrobot_msgs:/opt/ros/iron'), ('SHELL', '/bin/bash'), ('LC_NAME', 'nl_NL.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'nl_NL.UTF-8'), ('LC_IDENTIFICATION', 'nl_NL.UTF-8'), ('ROS_AUTOMATIC_DISCOVERY_RANGE', 'SUBNET'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/tjacobs/ros2_ws/build/agrobot_msgs'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/tjacobs/ros2_ws/install/my_package/lib/python3.10/site-packages:/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages:/home/tjacobs/ros2_ws/install/agrobot_msgs/lib/python3.10/site-packages:/opt/ros/iron/lib/python3.10/site-packages'), ('LC_NUMERIC', 'nl_NL.UTF-8'), ('LC_PAPER', 'nl_NL.UTF-8'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/tjacobs/ros2_ws/install/agrobot_msgs:/home/tjacobs/ros2_ws/install/my_package:/home/tjacobs/ros2_ws/install/agrobot_pkg:/opt/ros/iron')]), 'shell': False}
+[0.077637] (agrobot_msgs) StdoutLine: {'line': b'-- Found ament_cmake: 2.0.3 (/opt/ros/iron/share/ament_cmake/cmake)\n'}
+[0.100012] (-) TimerEvent: {}
+[0.183115] (agrobot_msgs) StdoutLine: {'line': b'-- Found rosidl_default_generators: 1.5.0 (/opt/ros/iron/share/rosidl_default_generators/cmake)\n'}
+[0.184791] (agrobot_msgs) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.200119] (-) TimerEvent: {}
+[0.208076] (agrobot_msgs) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[0.229507] (agrobot_msgs) StdoutLine: {'line': b'-- Found rosidl_adapter: 4.0.1 (/opt/ros/iron/share/rosidl_adapter/cmake)\n'}
+[0.300269] (-) TimerEvent: {}
+[0.359029] (agrobot_msgs) StderrLine: {'line': b'\x1b[31mCMake Error at /opt/ros/iron/share/rosidl_adapter/cmake/rosidl_adapt_interfaces.cmake:57 (message):\n'}
+[0.359262] (agrobot_msgs) StderrLine: {'line': b'  execute_process(/usr/bin/python3.10 -m rosidl_adapter --package-name\n'}
+[0.359348] (agrobot_msgs) StderrLine: {'line': b'  agrobot_msgs --arguments-file\n'}
+[0.359428] (agrobot_msgs) StderrLine: {'line': b'  /home/tjacobs/ros2_ws/build/agrobot_msgs/rosidl_adapter__arguments__agrobot_msgs.json\n'}
+[0.359496] (agrobot_msgs) StderrLine: {'line': b'  --output-dir\n'}
+[0.359545] (agrobot_msgs) StderrLine: {'line': b'  /home/tjacobs/ros2_ws/build/agrobot_msgs/rosidl_adapter/agrobot_msgs\n'}
+[0.359594] (agrobot_msgs) StderrLine: {'line': b'  --output-file\n'}
+[0.359641] (agrobot_msgs) StderrLine: {'line': b'  /home/tjacobs/ros2_ws/build/agrobot_msgs/rosidl_adapter/agrobot_msgs.idls)\n'}
+[0.359689] (agrobot_msgs) StderrLine: {'line': b'  returned error code 1:\n'}
+[0.359736] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.359784] (agrobot_msgs) StderrLine: {'line': b"  Error processing 'int64 crop y' of 'agrobot_msgs/VisionPublishClosestCrop':\n"}
+[0.359831] (agrobot_msgs) StderrLine: {'line': b"  'value 'y' can not be converted to type 'int64': must be a valid integer\n"}
+[0.359878] (agrobot_msgs) StderrLine: {'line': b"  value >= -9223372036854775808 and <= 9223372036854775807'\n"}
+[0.359926] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.359972] (agrobot_msgs) StderrLine: {'line': b'  Traceback (most recent call last):\n'}
+[0.360018] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.360063] (agrobot_msgs) StderrLine: {'line': b'    File "/opt/ros/iron/lib/python3.10/site-packages/rosidl_adapter/parser.py", line 753, in parse_primitive_value_string\n'}
+[0.360111] (agrobot_msgs) StderrLine: {'line': b'      value = int(value_string)\n'}
+[0.360157] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.360204] (agrobot_msgs) StderrLine: {'line': b"  ValueError: invalid literal for int() with base 10: 'y'\n"}
+[0.360365] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.360418] (agrobot_msgs) StderrLine: {'line': b'  \n'}
+[0.360465] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.360512] (agrobot_msgs) StderrLine: {'line': b'  During handling of the above exception, another exception occurred:\n'}
+[0.360558] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.360603] (agrobot_msgs) StderrLine: {'line': b'  \n'}
+[0.360649] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.360693] (agrobot_msgs) StderrLine: {'line': b'  Traceback (most recent call last):\n'}
+[0.360738] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.360781] (agrobot_msgs) StderrLine: {'line': b'    File "/opt/ros/iron/lib/python3.10/site-packages/rosidl_adapter/parser.py", line 756, in parse_primitive_value_string\n'}
+[0.360826] (agrobot_msgs) StderrLine: {'line': b'      value = int(value_string, 0)\n'}
+[0.360869] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.360913] (agrobot_msgs) StderrLine: {'line': b"  ValueError: invalid literal for int() with base 0: 'y'\n"}
+[0.360957] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.361000] (agrobot_msgs) StderrLine: {'line': b'  \n'}
+[0.361043] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.361086] (agrobot_msgs) StderrLine: {'line': b'  During handling of the above exception, another exception occurred:\n'}
+[0.361130] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.361174] (agrobot_msgs) StderrLine: {'line': b'  \n'}
+[0.361218] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.361261] (agrobot_msgs) StderrLine: {'line': b'  Traceback (most recent call last):\n'}
+[0.361305] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.361348] (agrobot_msgs) StderrLine: {'line': b'    File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main\n'}
+[0.361393] (agrobot_msgs) StderrLine: {'line': b'      return _run_code(code, main_globals, None,\n'}
+[0.361437] (agrobot_msgs) StderrLine: {'line': b'    File "/usr/lib/python3.10/runpy.py", line 86, in _run_code\n'}
+[0.361481] (agrobot_msgs) StderrLine: {'line': b'      exec(code, run_globals)\n'}
+[0.361524] (agrobot_msgs) StderrLine: {'line': b'    File "/opt/ros/iron/lib/python3.10/site-packages/rosidl_adapter/__main__.py", line 19, in <module>\n'}
+[0.361568] (agrobot_msgs) StderrLine: {'line': b'      sys.exit(main())\n'}
+[0.361612] (agrobot_msgs) StderrLine: {'line': b'    File "/opt/ros/iron/lib/python3.10/site-packages/rosidl_adapter/main.py", line 53, in main\n'}
+[0.361656] (agrobot_msgs) StderrLine: {'line': b'      abs_idl_file = convert_to_idl(\n'}
+[0.361700] (agrobot_msgs) StderrLine: {'line': b'    File "/opt/ros/iron/lib/python3.10/site-packages/rosidl_adapter/__init__.py", line 19, in convert_to_idl\n'}
+[0.361744] (agrobot_msgs) StderrLine: {'line': b'      return convert_msg_to_idl(\n'}
+[0.361787] (agrobot_msgs) StderrLine: {'line': b'    File "/opt/ros/iron/lib/python3.10/site-packages/rosidl_adapter/msg/__init__.py", line 28, in convert_msg_to_idl\n'}
+[0.361831] (agrobot_msgs) StderrLine: {'line': b'      msg = parse_message_string(package_name, input_file.stem, content)\n'}
+[0.361875] (agrobot_msgs) StderrLine: {'line': b'    File "/opt/ros/iron/lib/python3.10/site-packages/rosidl_adapter/parser.py", line 520, in parse_message_string\n'}
+[0.361919] (agrobot_msgs) StderrLine: {'line': b'      fields.append(Field(\n'}
+[0.361963] (agrobot_msgs) StderrLine: {'line': b'    File "/opt/ros/iron/lib/python3.10/site-packages/rosidl_adapter/parser.py", line 362, in __init__\n'}
+[0.362006] (agrobot_msgs) StderrLine: {'line': b'      self.default_value = parse_value_string(\n'}
+[0.362049] (agrobot_msgs) StderrLine: {'line': b'    File "/opt/ros/iron/lib/python3.10/site-packages/rosidl_adapter/parser.py", line 595, in parse_value_string\n'}
+[0.362092] (agrobot_msgs) StderrLine: {'line': b'      return parse_primitive_value_string(type_, value_string)\n'}
+[0.362136] (agrobot_msgs) StderrLine: {'line': b'    File "/opt/ros/iron/lib/python3.10/site-packages/rosidl_adapter/parser.py", line 758, in parse_primitive_value_string\n'}
+[0.362185] (agrobot_msgs) StderrLine: {'line': b'      raise ex\n'}
+[0.362232] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.362275] (agrobot_msgs) StderrLine: {'line': b"  rosidl_adapter.parser.InvalidValue: value 'y' can not be converted to type\n"}
+[0.362354] (agrobot_msgs) StderrLine: {'line': b"  'int64': must be a valid integer value >= -9223372036854775808 and <=\n"}
+[0.362413] (agrobot_msgs) StderrLine: {'line': b'  9223372036854775807\n'}
+[0.362490] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.362533] (agrobot_msgs) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[0.362740] (agrobot_msgs) StderrLine: {'line': b'  /opt/ros/iron/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:132 (rosidl_adapt_interfaces)\n'}
+[0.362799] (agrobot_msgs) StderrLine: {'line': b'  CMakeLists.txt:16 (rosidl_generate_interfaces)\n'}
+[0.362848] (agrobot_msgs) StderrLine: {'line': b'\n'}
+[0.362893] (agrobot_msgs) StderrLine: {'line': b'\x1b[0m\n'}
+[0.362938] (agrobot_msgs) StdoutLine: {'line': b'-- Configuring incomplete, errors occurred!\n'}
+[0.362988] (agrobot_msgs) StdoutLine: {'line': b'See also "/home/tjacobs/ros2_ws/build/agrobot_msgs/CMakeFiles/CMakeOutput.log".\n'}
+[0.363034] (agrobot_msgs) StderrLine: {'line': b'gmake: *** [Makefile:815: cmake_check_build_system] Error 1\n'}
+[0.364607] (agrobot_msgs) CommandEnded: {'returncode': 2}
+[0.400361] (-) TimerEvent: {}
+[0.486970] (agrobot_msgs) JobEnded: {'identifier': 'agrobot_msgs', 'rc': 2}
+[0.498003] (-) EventReactorShutdown: {}

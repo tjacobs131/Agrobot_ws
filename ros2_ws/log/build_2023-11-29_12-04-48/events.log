@@ -1,0 +1,71 @@
+[0.000000] (-) TimerEvent: {}
+[0.000224] (agrobot_pkg) JobQueued: {'identifier': 'agrobot_pkg', 'dependencies': OrderedDict()}
+[0.000290] (agrobot_pkg) JobStarted: {'identifier': 'agrobot_pkg'}
+[0.098477] (-) TimerEvent: {}
+[0.199948] (-) TimerEvent: {}
+[0.300812] (-) TimerEvent: {}
+[0.401263] (-) TimerEvent: {}
+[0.501694] (-) TimerEvent: {}
+[0.602127] (-) TimerEvent: {}
+[0.702555] (-) TimerEvent: {}
+[0.802990] (-) TimerEvent: {}
+[0.903574] (-) TimerEvent: {}
+[1.004680] (-) TimerEvent: {}
+[1.105200] (-) TimerEvent: {}
+[1.205651] (-) TimerEvent: {}
+[1.306119] (-) TimerEvent: {}
+[1.406600] (-) TimerEvent: {}
+[1.507114] (-) TimerEvent: {}
+[1.607612] (-) TimerEvent: {}
+[1.708099] (-) TimerEvent: {}
+[1.808582] (-) TimerEvent: {}
+[1.909075] (-) TimerEvent: {}
+[2.009660] (-) TimerEvent: {}
+[2.110395] (-) TimerEvent: {}
+[2.211020] (-) TimerEvent: {}
+[2.268765] (agrobot_pkg) Command: {'cmd': ['/usr/bin/python3', 'setup.py', 'egg_info', '--egg-base', '../../build/agrobot_pkg', 'build', '--build-base', '/home/tjacobs/ros2_ws/build/agrobot_pkg/build', 'install', '--record', '/home/tjacobs/ros2_ws/build/agrobot_pkg/install.log', '--single-version-externally-managed'], 'cwd': '/home/tjacobs/ros2_ws/src/Agrobot', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'tjacobs', 'LC_TIME': 'nl_NL.UTF-8', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/snap/webots/current/usr/share/webots/lib/controller:/opt/ros/iron/opt/rviz_ogre_vendor/lib:/opt/ros/iron/lib/x86_64-linux-gnu:/opt/ros/iron/lib', 'HOME': '/home/tjacobs', 'OLDPWD': '/home/tjacobs/ros2_ws/src', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'LC_MONETARY': 'nl_NL.UTF-8', 'SYSTEMD_EXEC_PID': '1667', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/tjacobs/ros2_ws/install', 'ROS_DISTRO': 'iron', 'LOGNAME': 'tjacobs', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'tjacobs', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/iron/bin:/home/tjacobs/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/tjacobs/.local/bin', 'SESSION_MANAGER': 'local/tjacobs-Aspire-A315-55G:@/tmp/.ICE-unix/1641,unix/tjacobs-Aspire-A315-55G:/tmp/.ICE-unix/1641', 'XDG_MENU_PREFIX': 'gnome-', 'LC_ADDRESS': 'nl_NL.UTF-8', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/6637949a_5207_4003_b209_6f46ba9dbaa8', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'LC_TELEPHONE': 'nl_NL.UTF-8', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.HZVCF2', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'GNOME_TERMINAL_SERVICE': ':1.172', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'ROS_DOMAIN_ID': '123', 'AMENT_PREFIX_PATH': '/home/tjacobs/ros2_ws/install/my_package:/home/tjacobs/ros2_ws/install/agrobot_pkg:/opt/ros/iron', 'SHELL': '/bin/bash', 'LC_NAME': 'nl_NL.UTF-8', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'LC_MEASUREMENT': 'nl_NL.UTF-8', 'LC_IDENTIFICATION': 'nl_NL.UTF-8', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/tjacobs/ros2_ws/build/agrobot_pkg', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/tjacobs/ros2_ws/build/agrobot_pkg/prefix_override:/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages:/home/tjacobs/ros2_ws/install/my_package/lib/python3.10/site-packages:/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages:/opt/ros/iron/lib/python3.10/site-packages', 'LC_NUMERIC': 'nl_NL.UTF-8', 'LC_PAPER': 'nl_NL.UTF-8', 'COLCON': '1', 'VTE_VERSION': '6800'}, 'shell': False}
+[2.311190] (-) TimerEvent: {}
+[2.411772] (-) TimerEvent: {}
+[2.512344] (-) TimerEvent: {}
+[2.612906] (-) TimerEvent: {}
+[2.713462] (-) TimerEvent: {}
+[2.814106] (-) TimerEvent: {}
+[2.914681] (-) TimerEvent: {}
+[3.015225] (-) TimerEvent: {}
+[3.115779] (-) TimerEvent: {}
+[3.216363] (-) TimerEvent: {}
+[3.227458] (agrobot_pkg) StdoutLine: {'line': b'running egg_info\n'}
+[3.230686] (agrobot_pkg) StdoutLine: {'line': b'writing ../../build/agrobot_pkg/agrobot_pkg.egg-info/PKG-INFO\n'}
+[3.231356] (agrobot_pkg) StdoutLine: {'line': b'writing dependency_links to ../../build/agrobot_pkg/agrobot_pkg.egg-info/dependency_links.txt\n'}
+[3.231951] (agrobot_pkg) StdoutLine: {'line': b'writing entry points to ../../build/agrobot_pkg/agrobot_pkg.egg-info/entry_points.txt\n'}
+[3.232608] (agrobot_pkg) StdoutLine: {'line': b'writing requirements to ../../build/agrobot_pkg/agrobot_pkg.egg-info/requires.txt\n'}
+[3.233012] (agrobot_pkg) StdoutLine: {'line': b'writing top-level names to ../../build/agrobot_pkg/agrobot_pkg.egg-info/top_level.txt\n'}
+[3.238916] (agrobot_pkg) StdoutLine: {'line': b"reading manifest file '../../build/agrobot_pkg/agrobot_pkg.egg-info/SOURCES.txt'\n"}
+[3.242252] (agrobot_pkg) StdoutLine: {'line': b"writing manifest file '../../build/agrobot_pkg/agrobot_pkg.egg-info/SOURCES.txt'\n"}
+[3.242899] (agrobot_pkg) StdoutLine: {'line': b'running build\n'}
+[3.243313] (agrobot_pkg) StdoutLine: {'line': b'running build_py\n'}
+[3.243838] (agrobot_pkg) StdoutLine: {'line': b'copying agrobot_pkg/simulation_controller_node.py -> /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg\n'}
+[3.244294] (agrobot_pkg) StdoutLine: {'line': b'copying agrobot_pkg/movement_controller_node.py -> /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg\n'}
+[3.245542] (agrobot_pkg) StdoutLine: {'line': b'running install\n'}
+[3.246079] (agrobot_pkg) StderrLine: {'line': b'/usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.\n'}
+[3.246501] (agrobot_pkg) StderrLine: {'line': b'  warnings.warn(\n'}
+[3.247284] (agrobot_pkg) StdoutLine: {'line': b'running install_lib\n'}
+[3.249737] (agrobot_pkg) StdoutLine: {'line': b'copying /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg/simulation_controller_node.py -> /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg\n'}
+[3.250422] (agrobot_pkg) StdoutLine: {'line': b'copying /home/tjacobs/ros2_ws/build/agrobot_pkg/build/lib/agrobot_pkg/movement_controller_node.py -> /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg\n'}
+[3.252323] (agrobot_pkg) StdoutLine: {'line': b'byte-compiling /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg/simulation_controller_node.py to simulation_controller_node.cpython-310.pyc\n'}
+[3.255820] (agrobot_pkg) StdoutLine: {'line': b'byte-compiling /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg/movement_controller_node.py to movement_controller_node.cpython-310.pyc\n'}
+[3.258360] (agrobot_pkg) StdoutLine: {'line': b'running install_data\n'}
+[3.261088] (agrobot_pkg) StdoutLine: {'line': b'running install_egg_info\n'}
+[3.267002] (agrobot_pkg) StdoutLine: {'line': b"removing '/home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[3.267903] (agrobot_pkg) StdoutLine: {'line': b'Copying ../../build/agrobot_pkg/agrobot_pkg.egg-info to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/python3.10/site-packages/agrobot_pkg-0.0.0-py3.10.egg-info\n'}
+[3.270891] (agrobot_pkg) StdoutLine: {'line': b'running install_scripts\n'}
+[3.316552] (-) TimerEvent: {}
+[3.357567] (agrobot_pkg) StdoutLine: {'line': b'Installing movement_controller_node script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg\n'}
+[3.358283] (agrobot_pkg) StdoutLine: {'line': b'Installing simulation_controller_node script to /home/tjacobs/ros2_ws/install/agrobot_pkg/lib/agrobot_pkg\n'}
+[3.359397] (agrobot_pkg) StdoutLine: {'line': b"writing list of installed files to '/home/tjacobs/ros2_ws/build/agrobot_pkg/install.log'\n"}
+[3.416793] (-) TimerEvent: {}
+[3.440427] (agrobot_pkg) CommandEnded: {'returncode': 0}
+[3.520460] (-) TimerEvent: {}
+[3.621028] (-) TimerEvent: {}
+[3.699139] (agrobot_pkg) JobEnded: {'identifier': 'agrobot_pkg', 'rc': 0}
+[3.700353] (-) EventReactorShutdown: {}

@@ -1,0 +1,26 @@
+{
+  "type_description_msg": {
+    "type_description": {
+      "type_name": "agrobot_msgs/srv/SimCropLocation_Request",
+      "fields": [
+        {
+          "name": "object_id",
+          "type": {
+            "type_id": 8,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": ""
+          },
+          "default_value": ""
+        }
+      ]
+    },
+    "referenced_type_descriptions": []
+  },
+  "type_hashes": [
+    {
+      "type_name": "agrobot_msgs/srv/SimCropLocation_Request",
+      "hash_string": "RIHS01_1ad072a00f091aa4f72734ba31e11d64b738af0b83b23652f7ea59738b74954b"
+    }
+  ]
+}

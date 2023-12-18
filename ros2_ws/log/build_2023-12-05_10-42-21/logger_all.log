@@ -1,0 +1,167 @@
+[0.824s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--packages-select', 'agrobot_msgs']
+[0.824s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=8, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=['agrobot_msgs'], packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7f2e5930d090>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7f2e598dbdf0>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7f2e598dbdf0>>)
+[0.862s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.862s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.862s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.862s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.862s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.862s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.862s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/tjacobs/ros2_ws'
+[0.862s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.862s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.862s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.863s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.863s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.863s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.863s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.863s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.863s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.871s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src/Agrobot) by extensions ['ignore', 'ignore_ament_install']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src/Agrobot) by extension 'ignore'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src/Agrobot) by extension 'ignore_ament_install'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src/Agrobot) by extensions ['colcon_pkg']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src/Agrobot) by extension 'colcon_pkg'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src/Agrobot) by extensions ['colcon_meta']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src/Agrobot) by extension 'colcon_meta'
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src/Agrobot) by extensions ['ros']
+[0.872s] Level 1:colcon.colcon_core.package_identification:_identify(src/Agrobot) by extension 'ros'
+[0.874s] DEBUG:colcon.colcon_core.package_identification:Package 'src/Agrobot' with type 'ros.ament_python' and name 'agrobot_pkg'
+[0.874s] Level 1:colcon.colcon_core.package_identification:_identify(src/agrobot_msgs) by extensions ['ignore', 'ignore_ament_install']
+[0.874s] Level 1:colcon.colcon_core.package_identification:_identify(src/agrobot_msgs) by extension 'ignore'
+[0.874s] Level 1:colcon.colcon_core.package_identification:_identify(src/agrobot_msgs) by extension 'ignore_ament_install'
+[0.875s] Level 1:colcon.colcon_core.package_identification:_identify(src/agrobot_msgs) by extensions ['colcon_pkg']
+[0.875s] Level 1:colcon.colcon_core.package_identification:_identify(src/agrobot_msgs) by extension 'colcon_pkg'
+[0.875s] Level 1:colcon.colcon_core.package_identification:_identify(src/agrobot_msgs) by extensions ['colcon_meta']
+[0.875s] Level 1:colcon.colcon_core.package_identification:_identify(src/agrobot_msgs) by extension 'colcon_meta'
+[0.875s] Level 1:colcon.colcon_core.package_identification:_identify(src/agrobot_msgs) by extensions ['ros']
+[0.875s] Level 1:colcon.colcon_core.package_identification:_identify(src/agrobot_msgs) by extension 'ros'
+[0.875s] DEBUG:colcon.colcon_core.package_identification:Package 'src/agrobot_msgs' with type 'ros.ament_cmake' and name 'agrobot_msgs'
+[0.875s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.875s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.875s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.875s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.875s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.926s] INFO:colcon.colcon_core.package_selection:Skipping not selected package 'agrobot_pkg' in 'src/Agrobot'
+[0.950s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.950s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.976s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 314 installed packages in /opt/ros/iron
+[0.977s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[1.052s] Level 5:colcon.colcon_core.verb:set package 'agrobot_msgs' build argument 'cmake_args' from command line to 'None'
+[1.052s] Level 5:colcon.colcon_core.verb:set package 'agrobot_msgs' build argument 'cmake_target' from command line to 'None'
+[1.052s] Level 5:colcon.colcon_core.verb:set package 'agrobot_msgs' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.052s] Level 5:colcon.colcon_core.verb:set package 'agrobot_msgs' build argument 'cmake_clean_cache' from command line to 'False'
+[1.052s] Level 5:colcon.colcon_core.verb:set package 'agrobot_msgs' build argument 'cmake_clean_first' from command line to 'False'
+[1.052s] Level 5:colcon.colcon_core.verb:set package 'agrobot_msgs' build argument 'cmake_force_configure' from command line to 'False'
+[1.052s] Level 5:colcon.colcon_core.verb:set package 'agrobot_msgs' build argument 'ament_cmake_args' from command line to 'None'
+[1.052s] Level 5:colcon.colcon_core.verb:set package 'agrobot_msgs' build argument 'catkin_cmake_args' from command line to 'None'
+[1.052s] Level 5:colcon.colcon_core.verb:set package 'agrobot_msgs' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.052s] DEBUG:colcon.colcon_core.verb:Building package 'agrobot_msgs' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/tjacobs/ros2_ws/build/agrobot_msgs', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/tjacobs/ros2_ws/install/agrobot_msgs', 'merge_install': False, 'path': '/home/tjacobs/ros2_ws/src/agrobot_msgs', 'symlink_install': False, 'test_result_base': None}
+[1.064s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[1.077s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[1.078s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/tjacobs/ros2_ws/src/agrobot_msgs' with build type 'ament_cmake'
+[1.078s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/tjacobs/ros2_ws/src/agrobot_msgs'
+[1.092s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[1.092s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.092s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.133s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/tjacobs/ros2_ws/build/agrobot_msgs': CMAKE_PREFIX_PATH=/opt/ros/iron /usr/bin/cmake --build /home/tjacobs/ros2_ws/build/agrobot_msgs -- -j8 -l8
+[2.331s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/tjacobs/ros2_ws/build/agrobot_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/iron /usr/bin/cmake --build /home/tjacobs/ros2_ws/build/agrobot_msgs -- -j8 -l8
+[2.382s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/tjacobs/ros2_ws/build/agrobot_msgs': CMAKE_PREFIX_PATH=/opt/ros/iron /usr/bin/cmake --install /home/tjacobs/ros2_ws/build/agrobot_msgs
+[2.433s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(agrobot_msgs)
+[2.434s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/tjacobs/ros2_ws/build/agrobot_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/iron /usr/bin/cmake --install /home/tjacobs/ros2_ws/build/agrobot_msgs
+[2.448s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs' for CMake module files
+[2.448s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs' for CMake config files
+[2.449s] Level 1:colcon.colcon_core.shell:create_environment_hook('agrobot_msgs', 'cmake_prefix_path')
+[2.461s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/cmake_prefix_path.ps1'
+[2.461s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/cmake_prefix_path.dsv'
+[2.462s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/cmake_prefix_path.sh'
+[2.462s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs/lib'
+[2.462s] Level 1:colcon.colcon_core.shell:create_environment_hook('agrobot_msgs', 'ld_library_path_lib')
+[2.475s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/ld_library_path_lib.ps1'
+[2.475s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/ld_library_path_lib.dsv'
+[2.475s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/ld_library_path_lib.sh'
+[2.475s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs/bin'
+[2.475s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs/lib/pkgconfig/agrobot_msgs.pc'
+[2.476s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs/lib/python3.10/site-packages'
+[2.476s] Level 1:colcon.colcon_core.shell:create_environment_hook('agrobot_msgs', 'pythonpath')
+[2.488s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/pythonpath.ps1'
+[2.489s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/pythonpath.dsv'
+[2.489s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/pythonpath.sh'
+[2.489s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs/bin'
+[2.501s] INFO:colcon.colcon_core.shell:Creating package script '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/package.ps1'
+[2.502s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/package.dsv'
+[2.502s] INFO:colcon.colcon_core.shell:Creating package script '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/package.sh'
+[2.503s] INFO:colcon.colcon_core.shell:Creating package script '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/package.bash'
+[2.504s] INFO:colcon.colcon_core.shell:Creating package script '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/package.zsh'
+[2.504s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/tjacobs/ros2_ws/install/agrobot_msgs/share/colcon-core/packages/agrobot_msgs)
+[2.562s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(agrobot_msgs)
+[2.574s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs' for CMake module files
+[2.574s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs' for CMake config files
+[2.574s] Level 1:colcon.colcon_core.shell:create_environment_hook('agrobot_msgs', 'cmake_prefix_path')
+[2.587s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/cmake_prefix_path.ps1'
+[2.587s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/cmake_prefix_path.dsv'
+[2.587s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/cmake_prefix_path.sh'
+[2.588s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs/lib'
+[2.588s] Level 1:colcon.colcon_core.shell:create_environment_hook('agrobot_msgs', 'ld_library_path_lib')
+[2.600s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/ld_library_path_lib.ps1'
+[2.600s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/ld_library_path_lib.dsv'
+[2.601s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/ld_library_path_lib.sh'
+[2.601s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs/bin'
+[2.601s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs/lib/pkgconfig/agrobot_msgs.pc'
+[2.601s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs/lib/python3.10/site-packages'
+[2.601s] Level 1:colcon.colcon_core.shell:create_environment_hook('agrobot_msgs', 'pythonpath')
+[2.614s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/pythonpath.ps1'
+[2.615s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/pythonpath.dsv'
+[2.615s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/hook/pythonpath.sh'
+[2.615s] Level 1:colcon.colcon_core.environment:checking '/home/tjacobs/ros2_ws/install/agrobot_msgs/bin'
+[2.628s] INFO:colcon.colcon_core.shell:Creating package script '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/package.ps1'
+[2.629s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/package.dsv'
+[2.629s] INFO:colcon.colcon_core.shell:Creating package script '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/package.sh'
+[2.629s] INFO:colcon.colcon_core.shell:Creating package script '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/package.bash'
+[2.630s] INFO:colcon.colcon_core.shell:Creating package script '/home/tjacobs/ros2_ws/install/agrobot_msgs/share/agrobot_msgs/package.zsh'
+[2.630s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/tjacobs/ros2_ws/install/agrobot_msgs/share/colcon-core/packages/agrobot_msgs)
+[2.630s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[2.631s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[2.631s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[2.631s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[2.648s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[2.649s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[2.649s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[2.657s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[2.671s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/tjacobs/ros2_ws/install/local_setup.ps1'
+[2.672s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/tjacobs/ros2_ws/install/_local_setup_util_ps1.py'
+[2.673s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/tjacobs/ros2_ws/install/setup.ps1'
+[2.687s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/tjacobs/ros2_ws/install/local_setup.sh'
+[2.688s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/tjacobs/ros2_ws/install/_local_setup_util_sh.py'
+[2.688s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/tjacobs/ros2_ws/install/setup.sh'
+[2.703s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/tjacobs/ros2_ws/install/local_setup.bash'
+[2.703s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/tjacobs/ros2_ws/install/setup.bash'
+[2.718s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/tjacobs/ros2_ws/install/local_setup.zsh'
+[2.718s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/tjacobs/ros2_ws/install/setup.zsh'

@@ -1,0 +1,11 @@
+setup.py
+agrobot_msgs/__init__.py
+agrobot_msgs.egg-info/PKG-INFO
+agrobot_msgs.egg-info/SOURCES.txt
+agrobot_msgs.egg-info/dependency_links.txt
+agrobot_msgs.egg-info/top_level.txt
+agrobot_msgs/msg/__init__.py
+agrobot_msgs/msg/_sim_crop_data.py
+agrobot_msgs/msg/_vision_publish_closest_crop.py
+agrobot_msgs/srv/__init__.py
+agrobot_msgs/srv/_sim_crop_location.py
