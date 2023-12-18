@@ -1,6 +1,0 @@
-{
-  "package_name": "agrobot_msgs",
-  "non_idl_tuples": [
-    "/home/tjacobs/ros2_ws/src/agrobot_msgs:srv/SimCropLocation.srv"
-  ]
-}

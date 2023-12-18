@@ -61,7 +61,7 @@ StepMotor box[4] =  {StepMotor (motor01, enablePin1, DirPin1, PulPin1, min1, Far
 
 void setup() {
 
-  Serial.begin(9600);         // Configure and start Serial Communication
+  Serial.begin(9600); // Configure and start Serial Communication
 
   // for (int i = 0; i < motorAmount; i++){
   //   box[i].begin();
