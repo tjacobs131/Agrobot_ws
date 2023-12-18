@@ -1,0 +1,15 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from agrobot_msgs/srv/SimCropLocation.srv
+// generated code does not contain a copyright notice
+
+
+module agrobot_msgs {
+  module srv {
+    struct SimCropLocation_Request {
+      int64 object_id;
+    };
+    struct SimCropLocation_Response {
+      sequence<double> position;
+    };
+  };
+};
