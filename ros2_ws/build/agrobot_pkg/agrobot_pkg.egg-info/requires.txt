@@ -1,5 +1,0 @@
-agrobot_msgs
-geometry_msgs
-rclpy
-setuptools
-webots_ros2_driverodrive_can

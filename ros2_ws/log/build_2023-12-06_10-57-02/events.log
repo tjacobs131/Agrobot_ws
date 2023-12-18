@@ -1,4 +1,0 @@
-[0.000000] (-) TimerEvent: {}
-[0.000098] (-) JobUnselected: {'identifier': 'agrobot_msgs'}
-[0.000119] (-) JobUnselected: {'identifier': 'agrobot_pkg'}
-[0.000134] (-) EventReactorShutdown: {}
