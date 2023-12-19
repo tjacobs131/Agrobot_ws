@@ -56,6 +56,10 @@ class VisionProcessingNode(Node):
 
         while True:
             success, img = cap.read()
+            
+            if(not success):
+                continue
+
             results = model(img, stream=True)
 
             # coordinates
@@ -84,6 +88,11 @@ class VisionProcessingNode(Node):
 
                     # confidence
                     confidence = math.ceil((box.conf[0] * 100)) / 100
+
+                    #
+                    # TODO:
+                    # If confidence > x, publish crop info
+                    #
                     self.publish_crop_info(crop_type=last_object_details.get('class_name'), crop_x=x1, crop_y=y1)
                     self.closest_crop_x = x1
                     self.closest_crop_y = y1

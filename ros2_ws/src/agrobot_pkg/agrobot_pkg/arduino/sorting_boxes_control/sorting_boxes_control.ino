@@ -1,5 +1,8 @@
 #include "Arduino_EMBRYO_2.h"
 
+#define OPEN 1
+#define CLOSE 0
+
 #define buffSize 256
 char receiveBuffer[buffSize];
 uint8_t receiveBufferSize = 0;
@@ -17,36 +20,36 @@ const int enablePin1 = 38;      // Enable Pin
 const int DirPin1 = A1;         // Direction Pin for motor01
 const int PulPin1 = A0;         // Step Pin for motor01
 
-const int endstop1 = 3;        // Endstop 1
+const int endstop1 = 15;        // Endstop 1
 
 
 #define motor02      2
 
 const int enablePin2 = 46;      // Enable Pin
-const int DirPin2 = A10;         // Direction Pin for motor01
-const int PulPin2 = A11;         // Step Pin for motor01
+const int DirPin2 = A7;         // Direction Pin for motor2
+const int PulPin2 = A6;         // Step Pin for motor2
 
-const int endstop2 = 2;        // Endstop 1
+const int endstop2 = 14;        // Endstop 2
 
 
 #define motor03      3
 
-const int enablePin3 = 44;      // Enable Pin
-const int DirPin3 = A12;         // Direction Pin for motor01
-const int PulPin3 = A13;         // Step Pin for motor01
+const int enablePin3 = A8;      // Enable Pin
+const int DirPin3 = 48;         // Direction Pin for motor3
+const int PulPin3 = 46;         // Step Pin for motor3
 
-const int endstop3 = 18;        // Endstop 2
+const int endstop3 = 2;        // Endstop 3
 
 
 #define motor04      4
 
-const int enablePin4 = 42;      // Enable Pin
-const int DirPin4 = 28;         // Direction Pin for motor01
-const int PulPin4 = 32;         // Step Pin for motor01
+const int enablePin4 = 24;      // Enable Pin
+const int DirPin4 = 28;         // Direction Pin for motor4
+const int PulPin4 = 26;         // Step Pin for motor4
 
-const int endstop4 = 15;        // Endstop 2
+const int endstop4 = 3;        // Endstop 4
 
-
+bool setup_ = 1;
 long steps = 0;
 
 /* Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency) */
@@ -62,18 +65,28 @@ void setup() {
 
   Serial.begin(9600); // Configure and start Serial Communication
 
+  for(int i = 0; i < motorAmount; i++){
+    box[i].setSpeed(600);
+  }
+
   // box[0].begin();
   // box[0].startWithoutHoming();
 
+  // Serial.println("Homing");
+
   // while(!box[0].readEndstopHome()){
+  //   Serial.println(box[0].readEndstopHome());
   //   box[0].moveBackward();
   // }
+
+  // Serial.println("Homing complete");
 
   // for (int i = 0; i < motorAmount; i++){
   //   box[i].begin();
   //   box[i].startWithoutHoming();
     
   //   while(!box[i].readEndstopHome()){
+      
   //     box[i].moveBackward();
   //   }
   // }
@@ -86,6 +99,23 @@ void setup() {
 }
 
 void loop() {
+
+  Serial.println(box[0].readEndstopHome());
+
+  Serial.print("1: ");
+  Serial.print(digitalRead(endstop1) ? "high - " : "low - ");
+
+  Serial.print("2: ");
+  Serial.print(digitalRead(endstop2) ? "high - " : "low - ");
+  
+  Serial.print("3: ");
+  Serial.print(digitalRead(endstop3) ? "high - " : "low - ");
+
+  Serial.print("4: ");
+  Serial.print(digitalRead(endstop4) ? "high - " : "low - ");
+
+  Serial.println();
+
   delay(100);
 
   // Read from serial
@@ -109,6 +139,8 @@ void loop() {
 
     // Split commands
     char *part = strtok(commandString.c_str(), ",");
+
+    bool bucketPositions[] = {CLOSE, CLOSE, CLOSE, CLOSE};
 
     while (part != NULL){ // Process split parts
       int targetBox = 0;
