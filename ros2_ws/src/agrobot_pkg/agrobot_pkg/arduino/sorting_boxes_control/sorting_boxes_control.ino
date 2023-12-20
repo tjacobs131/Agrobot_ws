@@ -1,47 +1,52 @@
 #define OPEN 1
 #define CLOSE 0
 
-#define speedDelay 2
-#define openPuls 900
-
 #define mBackwards -1
 #define mForwards 1
 #define mStop 0
 
+#define speedDelay 2 // Delay in ms between pulses
+#define openPuls 900 // Amount of pulses to open box
+
 #define motorCount 4
 
+// Buffer to store strings from the serial reader
+// Used to process commands received over serial
 #define buffSize 256
 char receiveBuffer[buffSize];
 uint8_t receiveBufferSize = 0;
 
+// Pin definitions
 const int enablePin[]  = {38, A2, A8, 24};
 const int dirPin[]     = {A1, A7, 48, 28};
 const int stepPin[]    = {A0, A6, 46, 26};
 const int endstopPin[] = {15, 14, 02, 03};
-unsigned long lastStepTime [motorCount];
-int motorPosition [motorCount];
-int motorMove [motorCount];
-bool motorPulse [motorCount];
-int targetPosition [motorCount];
 
-int closingBoxes = false;
-int closeBoxesDelay = 2000;
-int lastMillisTimer = 0;
+// Motor control variables
+unsigned long lastStepTime [motorCount]; // Keeps track of when the last step was taken
+int motorPosition [motorCount]; // Keeps track of the current step
+int motorMove [motorCount]; // Direction in which the motor should move
+bool motorPulse [motorCount]; // Decides whether or not to pulse the motor this arduino cycle
+int targetPosition [motorCount]; // Position at which the motor should stop moving
 
-/* Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency) */
+
 void setup() {
 
   Serial.begin(9600);  // Configure and start Serial Communication
 
-  while (!Serial) {};
+  while (!Serial) {}; // Wait for serial to be available
 
+  // Setup
   for (int i = 0; i < motorCount; i++) {
     pinMode(enablePin[i], OUTPUT);
     pinMode(dirPin[i], OUTPUT);
     pinMode(stepPin[i], OUTPUT);
     pinMode(endstopPin[i], INPUT);
-    Serial.print("home Motor: ");
+
+    Serial.print("Homing motor: ");
     Serial.println(i);
+
+    // Calibrate motor positions
     enableMotor(i);
     homeMotor(i);
   }
@@ -56,15 +61,19 @@ void enableMotor (int m){
 
 
 void homeMotor (int m){
+  // Set direction
   digitalWrite(dirPin[m], HIGH);
   motorMove[m] = mBackwards;
+
   while(digitalRead(endstopPin[m])){ // Move motor until endstop is triggered
-      //Serial.println(digitalRead(enablePin[m]));
+      // Pulse motor until endstop is pressed
       motorPulse[m] = !motorPulse[m];
       digitalWrite(stepPin[m], motorPulse[m]);
       delay(speedDelay);
   }
-  motorPosition[m] = 0;
+
+  // Motor is now at its home
+  motorPosition[m] = 0; // Update home position
 }
 
 void setPosition (int m, int p){
@@ -75,28 +84,29 @@ void stepMotor (void){
   
   // Iterate through each motor
   for (int i = 0; i < motorCount; i++) {
-   if(motorMove[i] == mForwards || motorMove[i] == mBackwards && // Check if the motor is supposed to be moving
-        lastStepTime[i] + speedDelay <= millis() && // Check if the last step was taken within the specified delay
-        (!digitalRead(endstopPin[i]) && motorMove[i] == mBackwards ||
-        digitalRead(endstopPin[i] && motorMove[i] == mForwards))) { 
+    if(motorMove[i] == mForwards || motorMove[i] == mBackwards && // Check if the motor is supposed to be moving
+        lastStepTime[i] + speedDelay <= millis() && // Check if the last step was not taken within the specified delay
+        (!digitalRead(endstopPin[i]) && motorMove[i] == mBackwards || // Check that motor is not moving backwards when bucket is closed
+        digitalRead(endstopPin[i] && motorMove[i] == mForwards))) {
       lastStepTime[i] = millis();
       motorPulse[i] = !motorPulse[i];
       digitalWrite(stepPin[i], motorPulse[i]);
       motorPosition[i] += motorMove[i];
-   }
+    }
 
-   if(motorPosition[i] < targetPosition[i]){
-     digitalWrite(dirPin[i], LOW);
-     motorMove[i] = mForwards;
-   }
-   else if(motorPosition[i] > targetPosition[i]){
-     digitalWrite(dirPin[i], HIGH);
-     motorMove[i] = mBackwards;
-   }
-   else if(motorMove[i] != mStop) {
-    motorMove[i] = mStop;
-    Serial.println("!OK");
-   }
+    // Update motor directions based on desired positions
+    if(motorPosition[i] < targetPosition[i]){
+      digitalWrite(dirPin[i], LOW);
+      motorMove[i] = mForwards;
+    }
+    else if(motorPosition[i] > targetPosition[i]){
+      digitalWrite(dirPin[i], HIGH);
+      motorMove[i] = mBackwards;
+    }
+    else if(motorMove[i] != mStop) { // Stop motor when current position == target position
+      motorMove[i] = mStop;
+      Serial.println("!OK");
+    }
   }
 }
  
@@ -117,7 +127,6 @@ void loop() {
     }
   }
 
-
   // Process serial buffer
   receiveBuffer[receiveBufferSize] = 0;
   if (receiveBuffer[0] == '!')  // Check buffer starts with command symbol
@@ -132,6 +141,7 @@ void loop() {
     // Split commands
     char *part = strtok(commandString.c_str(), ",");
 
+    // Store desired bucket positions
     bool bucketPositions[] = { CLOSE, CLOSE, CLOSE, CLOSE };
     int bucketPositionsLength = 4;
 
@@ -166,12 +176,12 @@ void loop() {
       part = strtok(NULL, ",");
     }
 
+    // Change bucket positions to desired positions
     move_boxes(bucketPositions, bucketPositionsLength);
   }
 }
 
 void move_boxes(bool positions[], int length){
-
   for(int i = 0; i < length; i++){
     if(positions[i] == OPEN){
       open_box(i, openPuls);
@@ -183,7 +193,6 @@ void move_boxes(bool positions[], int length){
 }
 
 void open_box(int m, int p) {
-  // Open the box
   setPosition(m, p);
 }
 
