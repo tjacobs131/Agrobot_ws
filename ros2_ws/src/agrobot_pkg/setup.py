@@ -7,6 +7,7 @@ package_name = 'agrobot_pkg'
 data_files = []
 data_files.append(('share/ament_index/resource_index/packages', ['resource/' + package_name]))
 data_files.append(('share/' + package_name + '/launch', ['launch/launch_sim.py']))
+data_files.append(('share/' + package_name + '/launch', ['launch/launch_bot.py']))
 data_files.append(('share/' + package_name + '/worlds', ['worlds/pathfinding_world.wbt']))
 data_files.append(('share/' + package_name + '/resource', ['resource/agrobot.urdf']))
 data_files.append(('share/' + package_name + '/resource', ['resource/agrobot_model.obj']))
@@ -40,6 +41,7 @@ setup(
             'movement_controller_node = agrobot_pkg.movement_controller_node:main',
             'vision_processing_node = agrobot_pkg.vision_processing_node:main',
             'subscribe_test = agrobot_pkg.subscribe_test:subscribe_to_crop_info',
+            'odrive_controller_node = agrobot_pkg.odrive_controller_node:main',
         ],
     },
 )

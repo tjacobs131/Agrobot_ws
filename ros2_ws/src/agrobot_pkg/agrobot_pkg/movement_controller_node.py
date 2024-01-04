@@ -54,7 +54,7 @@ class MovementControllerNode(Node):
         # Wait for simulation to finish setting up
         start_time = default_timer()
         while(True):
-            if(default_timer() - start_time > 8):
+            if(default_timer() - start_time > 15):
                 break
             
         self.move_cmd = Twist()
