@@ -1,5 +1,5 @@
-from ultralytics import YOLO
 import os
+from ultralytics import YOLO
 import cv2
 import math
 import rclpy
@@ -15,9 +15,10 @@ class VisionProcessingNode(Node):
     closest_crop_y = 0.0
     
     def __init__(self):
+
         # Set up node
         super().__init__('vision_processing_node')
-
+        cv2.setLogLevel(0)
         self.__node = rclpy.create_node('vision_processing_node')
 
         # Set up publishers
@@ -62,13 +63,17 @@ class VisionProcessingNode(Node):
 
             results = model(img, stream=True)
 
+            sleep(0.02)
+
             # coordinates
             for r in results:
                 boxes = r.boxes
 
                 for box in boxes:
-                    if math.ceil((box.conf[0] * 100)) / 100 <= 0.85:
-                        print("Confidence --->", math.ceil((box.conf[0] * 100)) / 100)
+                    # confidence
+                    confidence = math.ceil((box.conf[0] * 100)) / 100
+
+                    if confidence <= 0.85:
                         continue
 
                     # bounding box
@@ -79,27 +84,19 @@ class VisionProcessingNode(Node):
                     # update last detected object details
                     last_object_details = {
                         "bounding_box": (x1, y1, x2, y2),
-                        "confidence": math.ceil((box.conf[0] * 100)) / 100,
+                        "confidence": confidence,
                         "class_name": classNames[int(box.cls[0])]
                     }
 
                     # put box in cam
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+                    cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)                    
 
-                    # confidence
-                    confidence = math.ceil((box.conf[0] * 100)) / 100
-
-                    #
-                    # TODO:
-                    # If confidence > x, publish crop info
-                    #
                     self.publish_crop_info(crop_type=last_object_details.get('class_name'), crop_x=x1, crop_y=y1)
                     self.closest_crop_x = x1
                     self.closest_crop_y = y1
 
                     # class name
                     cls = int(box.cls[0])
-                    #print("Class name -->", classNames[cls])
 
                     # object details
                     org = [x1, y1]
@@ -121,12 +118,14 @@ class VisionProcessingNode(Node):
     def publish_crop_info(self, crop_type, crop_x, crop_y):
         # Create message
         msg = VisionPublishClosestCrop()
-        msg.data = [crop_type, crop_x, crop_y]
+        msg.crop_type = crop_type
+        msg.crop_x = crop_x
+        msg.crop_y = crop_y
 
         try:
             # Publish the message
-            self.logger.info('Publishing: crop_type={}, crop_x={}, crop_y={}'.format(
-                msg.data[0], msg.data[1], msg.data[2]))
+            # self.logger.info('Publishing: crop_type={}, crop_x={}, crop_y={}'.format(
+            #     msg.crop_type, msg.crop_x, msg.crop_y))
             self.publisher.publish(msg)
 
             # Sleep to allow time for the message to be published

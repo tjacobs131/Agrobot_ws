@@ -38,7 +38,11 @@ class ODriveControllerNode(Node):
 
         self.odrv.axis1.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
 
+        self.logger.info("Finished ODrive calibration")
+
     def __process_velocity_command(self, cmd):
+        self.logger.info("ODrive received: " + str(cmd.linear.x))
+
         velocity = cmd.linear.x
 
         self.odrv.axis0.controller.input_vel = velocity
