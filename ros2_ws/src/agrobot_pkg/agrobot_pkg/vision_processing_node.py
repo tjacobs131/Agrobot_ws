@@ -38,6 +38,7 @@ class VisionProcessingNode(Node):
         cap.set(3, 640)
         cap.set(4, 480)
 
+
         script_path = os.path.dirname(os.path.realpath(__file__))
 
         # Weights are located in /resource/weights/best.pt
@@ -63,7 +64,7 @@ class VisionProcessingNode(Node):
 
             results = model(img, stream=True)
 
-            sleep(0.02)
+            sleep(0.01)
 
             # coordinates
             for r in results:
