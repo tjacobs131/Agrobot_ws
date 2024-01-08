@@ -41,6 +41,8 @@ class MovementControllerNode(Node):
         self.logger.info("Start movement controller")
 
         # Set up loop timers
+        # These are necessary to replace while loops
+        # Because while loops cause the node to not update subscriber callbacks
         self.harvest_timer = self.create_timer(0.5, self.harvest_loop)
         self.harvest_timer.cancel()
         self.adjustment_timer = self.create_timer(1, self.adjust_position)
@@ -59,9 +61,8 @@ class MovementControllerNode(Node):
 
     def start(self):
 
-        # Robot starts in front of planter box
-
-        # Wait for simulation to finish setting up
+        # Wait for direct drive motors to calibrate
+        # TODO: Replace this with some system to start this node when odrive calibration is finished
         start_time = default_timer()
         while(True):
             if(default_timer() - start_time > self.calibration_time):
@@ -154,7 +155,7 @@ class MovementControllerNode(Node):
         self.cmd_vel_pub.publish(self.move_cmd)
         
         self.adjustment_count += 1
-        if self.adjustment_count < self.adjustment_count_target:
+        if self.adjustment_count < self.adjustment_count_target: # If not done adjusting
 
             # Keep adjusting
             self.adjustment_movement_speed / 2
@@ -175,7 +176,9 @@ class MovementControllerNode(Node):
         self.delivery_timer.reset()
             
     def deliver_loop(self):
-        
+        #
+        # TODO: Implement delivering
+        #
         # if detected_marker != None:
             # move slowly
             # create timer
