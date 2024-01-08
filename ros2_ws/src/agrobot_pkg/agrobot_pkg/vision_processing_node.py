@@ -22,10 +22,10 @@ class VisionProcessingNode(Node):
         self.__node = rclpy.create_node('vision_processing_node')
 
         # Set up publishers
-        self.publisher = self.create_publisher(VisionPublishClosestCrop, 'detected_objects', 10)
+        self.publisher = self.create_publisher(VisionPublishClosestCrop, 'detected_crop', 10)
 
         # Set up service
-        self.__node.create_service(UpdateCropLocation, 'update_crop_location', self.update_crop_location_callback)
+        self.__node.create_service(UpdateCropLocation, 'update_crop_location', self.__update_crop_location_callback)
         
         self.logger = self.get_logger() # Set up logger
         self.logger.info("Start vision processing")
@@ -37,7 +37,6 @@ class VisionProcessingNode(Node):
         cap = cv2.VideoCapture(0)
         cap.set(3, 640)
         cap.set(4, 480)
-
 
         script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -135,7 +134,7 @@ class VisionProcessingNode(Node):
         except KeyboardInterrupt:
             pass
 
-    def update_crop_location_callback(self, request, response):
+    def __update_crop_location_callback(self, request, response):
         response.crop_x = self.closest_crop_x
         response.crop_y = self.closest_crop_y
 

@@ -12,7 +12,8 @@ from rclpy.callback_groups import ReentrantCallbackGroup
 
 class MovementControllerNode(Node):
 
-    detected_object = None # Holds object which is currently being collected
+    detected_crop = None # Holds object which is currently being collected
+    detected_marker = None # Holds currently detected position marker
     adjustment_count = 0 # Current adjustment iteration
 
     calibration_time = 15 # Time to wait before starting (seconds)
@@ -33,25 +34,28 @@ class MovementControllerNode(Node):
         self.cmd_vel_pub = self.create_publisher(Twist, "/cmd_vel", 1) # Sends vel commands to the odrive controller
 
         # Set up subscribers
-        self.create_subscription(VisionPublishClosestCrop, 'detected_objects', self.__update_object, 1)
+        self.create_subscription(VisionPublishClosestCrop, 'detected_crop', self.__update_crop, 1)
         
-        self.logger = self.get_logger() # Set up logger
+        # Set up logger
+        self.logger = self.get_logger()
         self.logger.info("Start movement controller")
 
         # Set up loop timers
-        self.harvest_timer = self.create_timer(1, self.harvest_loop) # Harvesting loop
+        self.harvest_timer = self.create_timer(0.5, self.harvest_loop)
         self.harvest_timer.cancel()
         self.adjustment_timer = self.create_timer(1, self.adjust_position)
         self.adjustment_timer.cancel()
+        self.delivery_timer = self.create_timer(0.5, self.deliver_loop)
+        self.delivery_timer.cancel()
 
-        self.start() # Start pathfinding script
+        self.start() # Start movement script
 
-    def __update_object(self, object):
+    def __update_crop(self, object):
 
         if object.crop_type == "":
-            self.detected_object = None
+            self.detected_crop = None
         else:
-            self.detected_object = object
+            self.detected_crop = object
 
     def start(self):
 
@@ -66,19 +70,15 @@ class MovementControllerNode(Node):
         self.logger.info("Start harvesting")
         self.start_harvesting()
 
-        self.deliverCrops()
+        self.start_delivering()
 
-        # Position self to drive over row two
-
-        # self.harvestRowOfPlanters()   
-
-        # Drive backwards until planter boxes cleared
-
+        #
+        # TODO: Write code to make robot harvest the planterboxes in column two
+        #
+        # Position self to drive over column two
+        # self.start_harvesting()
         # Position self to deliver plants
-
-        #   `                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   self.deliverCrops()
-
-        # Drive forward until boxes cleared
+        # self.start_delivering()
 
     def start_harvesting(self):
 
@@ -87,12 +87,14 @@ class MovementControllerNode(Node):
         self.move_cmd.linear.x = 4.0
         self.cmd_vel_pub.publish(self.move_cmd)
 
+        self.detected_crop = None # Remove last detected crop
+
         self.harvest_timer.reset()
 
     def harvest_loop(self):
 
         # If there is no object detected, keep driving
-        if self.detected_object != None:
+        if self.detected_crop != None:
             self.harvest_timer.cancel() # Crop found, stop looking
 
             self.logger.info("Detected crop, stopping")
@@ -122,7 +124,7 @@ class MovementControllerNode(Node):
         self.adjustment_timer.cancel()
         self.logger.info("Adjusting position")
 
-        crop_y = self.detected_object.crop_y
+        crop_y = self.detected_crop.crop_y
         target_diff = abs(crop_y - self.target_crop_y)
         
         # Calculate time to move
@@ -139,9 +141,9 @@ class MovementControllerNode(Node):
             self.move_cmd.linear.x = self.adjustment_movement_speed # Adjust forwards
         else:
             self.move_cmd.linear.x = -self.adjustment_movement_speed # Adjust backwards
-
         self.cmd_vel_pub.publish(self.move_cmd)
 
+        # Wait for calculated time
         start_time = default_timer()
         while True:
             if default_timer() - start_time > target_time:
@@ -160,36 +162,36 @@ class MovementControllerNode(Node):
 
         else:
 
-            self.adjustment_movement_speed = 2.0
-
             # Done adjusting
+            self.adjustment_movement_speed = 2.0
 
             #
             # TODO: Collect crop
             #
 
             self.start_harvesting()
+
+    def start_delivering(self):
+        self.delivery_timer.reset()
             
+    def deliver_loop(self):
+        
+        # if detected_marker != None:
+            # move slowly
+            # create timer
+            # wait until timer > x seconds
+            # stop
+            # open first set of boxes
+            # close first set boxes
 
-    def deliverCrops(self):
-        # while (not detected unseen bin marker):
+            # move slowly
+            # reset timer
+            # wait until timer > y seconds
+            # stop
+            # open second set of boxes
+            # close second set of boxes
 
-            # Move backwards
-            
-        # Open appropriate sorting box
-
-        # Wait
-
-        # Add marker to seen markers
-
-        # if(seen marker count == 4):
-
-            # Drive forward until delivery boxes cleared
-
-            # empty seen marker list
-
-            return
-
+        pass
 
 def main(args=None):
     rclpy.init(args=args)
