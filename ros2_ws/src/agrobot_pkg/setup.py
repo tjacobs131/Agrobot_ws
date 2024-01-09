@@ -41,8 +41,7 @@ setup(
             'movement_controller_node = agrobot_pkg.movement_controller_node:main',
             'vision_processing_node = agrobot_pkg.vision_processing_node:main',
             'odrive_controller_node = agrobot_pkg.odrive_controller_node:main',
-            
-            'subscribe_test = agrobot_pkg.subscribe_test:subscribe_to_crop_info',
+            'stop_robot_node = agrobot_pkg.stop_robot_node:initialize',
         ],
     },
 )
