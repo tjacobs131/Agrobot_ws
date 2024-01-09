@@ -2,7 +2,7 @@
 
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/backgrounds/protos/TexturedBackground.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
-EXTERNPROTO "/home/tjacobs/ros2_ws/install/agrobot_pkg/share/agrobot_pkg/protos/PlanterBox.proto"
+EXTERNPROTO "/home/tjacobs/Agrobot_ws/install/agrobot_pkg/share/agrobot_pkg/protos/PlanterBox.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/released/projects/objects/floors/protos/RectangleArena.proto"
 
 WorldInfo {
