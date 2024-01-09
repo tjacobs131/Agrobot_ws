@@ -29,6 +29,8 @@ class StopRobotNode(Node):
             curses.endwin()
 
     def publish_empty_twist(self):
+        
+        # Publish emergency stop command
         twist = Twist()
         twist.angular.x = -99.0
         twist.angular.y = -99.0
@@ -41,4 +43,4 @@ def main(stdscr):
     stop_robot_node.start()
 
 def initialize():
-    curses.wrapper(main)
+    curses.wrapper(main) # Passes terminal reference to main (stdscr)

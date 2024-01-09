@@ -12,6 +12,7 @@ from rclpy.callback_groups import ReentrantCallbackGroup
 
 class MovementControllerNode(Node):
 
+    lock_detected_crop = False # Locks detected crop data so that the position is not updated unexpectedly
     detected_crop = None # Holds object which is currently being collected
     detected_marker = None # Holds currently detected position marker
     adjustment_count = 0 # Current adjustment iteration
@@ -54,10 +55,11 @@ class MovementControllerNode(Node):
 
     def __update_crop(self, object):
 
-        if object.crop_type == "":
-            self.detected_crop = None
-        else:
-            self.detected_crop = object
+        if(not self.lock_detected_crop):
+            if object.crop_type == "":
+                self.detected_crop = None
+            else:
+                self.detected_crop = object
 
     def start(self):
 
@@ -74,7 +76,7 @@ class MovementControllerNode(Node):
         self.start_delivering()
 
         #
-        # TODO: Write code to make robot harvest the planterboxes in column two
+        # TODO: Write code to make robot harvest the planter boxes in column two
         #
         # Position self to drive over column two
         # self.start_harvesting()
@@ -153,6 +155,9 @@ class MovementControllerNode(Node):
         # Stop
         self.move_cmd = Twist()
         self.cmd_vel_pub.publish(self.move_cmd)
+
+        if self.adjustment_count == self.adjustment_count_target:
+            self.lock_detected_crop = True
         
         self.adjustment_count += 1
         if self.adjustment_count < self.adjustment_count_target: # If not done adjusting
@@ -170,7 +175,10 @@ class MovementControllerNode(Node):
             # TODO: Collect crop
             #
 
-            self.start_harvesting()
+            # while not result:
+            #     continue
+            #
+            # self.start_harvesting()
 
     def start_delivering(self):
         self.delivery_timer.reset()

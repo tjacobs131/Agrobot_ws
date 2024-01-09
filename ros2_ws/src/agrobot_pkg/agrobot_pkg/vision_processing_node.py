@@ -11,9 +11,10 @@ from agrobot_msgs.srv import UpdateCropLocation
 
 class VisionProcessingNode(Node):
 
+    closest_crop_type = None
     closest_crop_x = 0.0
     closest_crop_y = 0.0
-    
+
     def __init__(self):
 
         # Set up node
@@ -92,6 +93,7 @@ class VisionProcessingNode(Node):
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)                    
 
                     self.publish_crop_info(crop_type=last_object_details.get('class_name'), crop_x=x1, crop_y=y1)
+                    self.closest_crop_type = last_object_details.get('class_name')
                     self.closest_crop_x = x1
                     self.closest_crop_y = y1
 
@@ -122,19 +124,10 @@ class VisionProcessingNode(Node):
         msg.crop_x = crop_x
         msg.crop_y = crop_y
 
-        try:
-            # Publish the message
-            # self.logger.info('Publishing: crop_type={}, crop_x={}, crop_y={}'.format(
-            #     msg.crop_type, msg.crop_x, msg.crop_y))
-            self.publisher.publish(msg)
-
-            # Sleep to allow time for the message to be published
-            #sleep(1)
-
-        except KeyboardInterrupt:
-            pass
+        self.publisher.publish(msg)
 
     def __update_crop_location_callback(self, request, response):
+        response.crop_type = self.closest_crop_type
         response.crop_x = self.closest_crop_x
         response.crop_y = self.closest_crop_y
 
