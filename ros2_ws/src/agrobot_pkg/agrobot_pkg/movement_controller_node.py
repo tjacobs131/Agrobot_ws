@@ -1,23 +1,22 @@
-import string
+import glob
 import rclpy
-import threading
+import serial
+import serial.tools.list_ports
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from timeit import default_timer
 from std_msgs.msg import String
 from agrobot_msgs.srv import UpdateCropLocation
 from agrobot_msgs.msg import VisionPublishClosestCrop
-from rclpy.callback_groups import ReentrantCallbackGroup
 
 
 class MovementControllerNode(Node):
 
     lock_detected_crop = False # Locks detected crop data so that the position is not updated unexpectedly
     detected_crop = None # Holds object which is currently being collected
-    detected_marker = None # Holds currently detected position marker
-    adjustment_count = 0 # Current adjustment iteration
+    detected_marker = False # Holds whether a marker is currently detected
 
-    calibration_time = 15 # Time to wait before starting (seconds)
+    calibration_time = 10 # Time to wait before starting (seconds)
     
     movement_speed = 4.0
     adjustment_movement_speed = 2.0
@@ -25,6 +24,9 @@ class MovementControllerNode(Node):
 
     target_crop_y = 100 # Position at which the robot should stop (expected crop location)
     adjustment_count_target = 3 # Adjustment iterations to perform
+    adjustment_count = 0 # Current adjustment iteration
+
+    serial_com = None
 
     def __init__(self):
 
@@ -36,10 +38,19 @@ class MovementControllerNode(Node):
 
         # Set up subscribers
         self.create_subscription(VisionPublishClosestCrop, 'detected_crop', self.__update_crop, 1)
+        self.create_subscription(String, 'detected_marker', self.__update_marker, 1)
         
         # Set up logger
         self.logger = self.get_logger()
         self.logger.info("Start movement controller")
+
+        # Set up communication port to Arduino
+        ports = glob.glob('/dev/tty[A-Za-z]*')
+        for port in ports:
+            if "ACM" in port:
+                self.serial_com = serial.Serial(port, 9600, write_timeout=0.5)  
+                self.logger.info("Connected to arduino")
+                break
 
         # Set up loop timers
         # These are necessary to replace while loops
@@ -61,14 +72,14 @@ class MovementControllerNode(Node):
             else:
                 self.detected_crop = object
 
+    def __update_marker(self, marker):
+        self.detected_marker = True
+
     def start(self):
 
         # Wait for direct drive motors to calibrate
         # TODO: Replace this with some system to start this node when odrive calibration is finished
-        start_time = default_timer()
-        while(True):
-            if(default_timer() - start_time > self.calibration_time):
-                break
+        self.wait(self.calibration_time)
 
         self.logger.info("Start harvesting")
         self.start_harvesting()
@@ -86,12 +97,8 @@ class MovementControllerNode(Node):
     def start_harvesting(self):
 
         # Start moving forward    
-        self.move_cmd = Twist()
-        self.move_cmd.linear.x = 4.0
-        self.cmd_vel_pub.publish(self.move_cmd)
-
+        self.execute_movement_command(self.movement_speed)
         self.detected_crop = None # Remove last detected crop
-
         self.harvest_timer.reset()
 
     def harvest_loop(self):
@@ -101,72 +108,52 @@ class MovementControllerNode(Node):
             self.harvest_timer.cancel() # Crop found, stop looking
 
             self.logger.info("Detected crop, stopping")
-
             # Apply braking force
-            self.move_cmd = Twist()
-            self.move_cmd.linear.x = self.braking_force
-            self.cmd_vel_pub.publish(self.move_cmd)
-
-            start_time = default_timer()
-            while(True):
-                if(default_timer() - start_time > 2):
-                    break
+            self.execute_movement_command(self.braking_force)
+            self.wait(2)
             
             # Stop
-            self.move_cmd = Twist()
-            self.cmd_vel_pub.publish(self.move_cmd)
+            self.execute_movement_command(0)
 
-            self.logger.info("Adjusting position")
-
-            # Adjustment loop
+            # Start adjustment loop
             self.adjustment_count = 0
             self.adjustment_timer.reset()
 
     def adjust_position(self):
 
         self.adjustment_timer.cancel()
-        self.logger.info("Adjusting position")
 
+        self.logger.info("Adjusting position")
         crop_y = self.detected_crop.crop_y
         target_diff = abs(crop_y - self.target_crop_y)
         
         # Calculate time to move
         target_time = (abs(target_diff)) / 40 # Convert crop distance to time to move
 
-        self.logger.info("Target position: " + str(crop_y))
-        self.logger.info("Crop pos diff: " + str(target_diff))
+        self.logger.info("Target position difference: " + str(target_diff))
         self.logger.info("Target time: " + str(target_time))
         self.logger.info("Iteration: " + str(self.adjustment_count))
 
         # Determine direction to move
-        self.move_cmd = Twist()
         if(crop_y < self.target_crop_y):
-            self.move_cmd.linear.x = self.adjustment_movement_speed # Adjust forwards
+            self.execute_movement_command(self.adjustment_movement_speed) # Adjust forwards
         else:
-            self.move_cmd.linear.x = -self.adjustment_movement_speed # Adjust backwards
-        self.cmd_vel_pub.publish(self.move_cmd)
+            self.execute_movement_command(-self.adjustment_movement_speed) # Adjust backwards
 
         # Wait for calculated time
-        start_time = default_timer()
-        while True:
-            if default_timer() - start_time > target_time:
-                break
+        self.wait(target_time)
         
         # Stop
-        self.move_cmd = Twist()
-        self.cmd_vel_pub.publish(self.move_cmd)
+        self.execute_movement_command(0)
 
-        if self.adjustment_count == self.adjustment_count_target:
-            self.lock_detected_crop = True
-        
         self.adjustment_count += 1
         if self.adjustment_count < self.adjustment_count_target: # If not done adjusting
 
             # Keep adjusting
             self.adjustment_movement_speed / 2
             self.adjustment_timer.reset()
-
         else:
+            self.lock_detected_crop = True
 
             # Done adjusting
             self.adjustment_movement_speed = 2.0
@@ -184,25 +171,63 @@ class MovementControllerNode(Node):
         self.delivery_timer.reset()
             
     def deliver_loop(self):
-        #
-        # TODO: Implement delivering
-        #
-        # if detected_marker != None:
-            # move slowly
-            # create timer
-            # wait until timer > x seconds
-            # stop
-            # open first set of boxes
-            # close first set boxes
+        if self.detected_marker:
+            self.harvest_timer.cancel()
+            self.delivery_timer.cancel()
 
-            # move slowly
-            # reset timer
-            # wait until timer > y seconds
-            # stop
-            # open second set of boxes
-            # close second set of boxes
+            self.logger.info("Detected marker, stopping")
 
-        pass
+            # Apply braking force
+            self.execute_movement_command(self.braking_force)
+            self.wait(1)
+            
+            # Stop
+            self.execute_movement_command(0)
+
+            self.logger.info("Delivering")
+            self.execute_movement_command(self.adjustment_movement_speed)
+            self.wait(2)
+
+            self.execute_movement_command(0)
+
+            self.logger.info("Opening boxes")
+            self.execute_collection_bucket_command("!1O,4O\n")
+
+            self.logger.info("Closing boxes")
+            self.execute_collection_bucket_command("!1C,4C\n")
+
+    def execute_movement_command(self, speed):
+        self.move_cmd = Twist()
+        self.move_cmd.linear.x = speed
+        self.cmd_vel_pub.publish(self.move_cmd)
+
+    def execute_collection_bucket_command(self, command):
+        self.logger.info("Executing arduino command: " + command)
+        instruction_count = len(command.split(','))
+        
+        if(self.serial_com == None):
+            self.logger.error("Arduino not connected")
+            return
+        
+        self.serial_com.read_all()
+        self.serial_com.write(command.encode('utf-8'))
+
+        # Wait for !OK responses
+        output = b""
+        count = 0
+        while (count < instruction_count):
+            output += self.serial_com.readline()
+            if b"!OK" in output:
+                count += 1
+                output = b""
+        
+        self.logger.info("Arduino command executed")
+    
+    def wait(self, seconds):
+        start_time = default_timer()
+        while(True):
+            if(default_timer() - start_time > seconds):
+                break
 
 def main(args=None):
     rclpy.init(args=args)
