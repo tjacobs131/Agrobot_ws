@@ -5,7 +5,7 @@ import cv2
 import math
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String, Int64MultiArray
+from std_msgs.msg import String
 from time import sleep
 from agrobot_msgs.msg import VisionPublishClosestCrop
 from agrobot_msgs.srv import UpdateCropLocation
@@ -55,12 +55,11 @@ class VisionProcessingNode(Node):
 
         if(mask_size > 2000):
             self.logger.info("Marker detected")
+            self.marker_spot_frames += 1
 
             if(self.marker_spot_frames >= self.minimum_marker_spot_frames):
                 self.publish_marker_info()
                 self.marker_spot_frames = 0
-
-            self.marker_spot_frames += 1
         else:
             self.marker_spot_frames = 0
 

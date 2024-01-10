@@ -13,20 +13,19 @@ from controller import Camera, CameraRecognitionObject, Robot, Supervisor
 HALF_DISTANCE_BETWEEN_WHEELS = 0.045
 WHEEL_RADIUS = 0.025
 
-class SimulationControllerNode:
-    def init(self, webots_node, properties):        
-        self.detected_objects = {}
+detected_objects = {}
 
+class SimulationControllerNode:
+    def init(self, webots_node, properties):
         self.supervisor = Supervisor()
 
+        # Set up robot
         self.__robot = webots_node.robot
-
         self.__left_motor = self.__robot.getDevice('left wheel motor')
         self.__right_motor = self.__robot.getDevice('right wheel motor')
 
         self.__left_motor.setPosition(float('inf'))
         self.__left_motor.setVelocity(0)
-
         self.__right_motor.setPosition(float('inf'))
         self.__right_motor.setVelocity(0)
 
@@ -42,7 +41,6 @@ class SimulationControllerNode:
 
         # Set up publishers
         self.__node.camera_publisher = self.__node.create_publisher(Image, 'camera_image', 10)
-        self.__node.detected_objects_publisher = self.__node.create_publisher(String, 'detected_objects', 10)
         self.__node.closest_crop_publisher = self.__node.create_publisher(VisionPublishClosestCrop, 'detected_crop', 1)
 
         # Set up subscribers
@@ -119,6 +117,7 @@ class SimulationControllerNode:
                     # Current object is closer to target than closest
                     closest_obj = obj
             
+            # Publish closest object
             if closest_obj != None:
                 msg = VisionPublishClosestCrop()
                 msg.crop_type = "lettuce"
@@ -126,12 +125,3 @@ class SimulationControllerNode:
                 msg.crop_y = closest_obj.getPosition()[1]
 
                 self.__node.closest_crop_publisher.publish(msg)
-
-            msg = String()
-            for obj in detected_objects:
-                msg.data += str(obj.getId()) + ","
-                position_list = [obj.getPosition()[i] for i in range(3)]
-                msg.data += str(position_list[0]) + ","
-                msg.data += str(position_list[2]) + ";"
-                
-            self.__node.detected_objects_publisher.publish(msg)

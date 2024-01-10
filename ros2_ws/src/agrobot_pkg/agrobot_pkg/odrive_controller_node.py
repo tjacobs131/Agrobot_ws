@@ -39,15 +39,15 @@ class ODriveControllerNode(Node):
             self.odrv.axis0.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
             self.odrv.axis1.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
 
-            while self.odrv.axis0.current_state != AXIS_STATE_IDLE:
+            while self.odrv.axis0.current_state != AXIS_STATE_IDLE: # Wait for calibration to finish
                 time.sleep(0.1)
 
-            self.odrv.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+            self.odrv.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL # Enable closed loop control
 
-            while(self.odrv.axis1.current_state != AXIS_STATE_IDLE):
+            while(self.odrv.axis1.current_state != AXIS_STATE_IDLE): # Wait for calibration to finish
                 time.sleep(0.1)
 
-            self.odrv.axis1.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+            self.odrv.axis1.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL # Enable closed loop control
 
             self.logger.info("Finished ODrive calibration")
 
@@ -59,9 +59,13 @@ class ODriveControllerNode(Node):
            and cmd.angular.z == -99.0):
             
             # EMERGENCY STOP COMMAND
-            self.logger.warning("!!!\nODRIVE RECEIVED STOP COMMAND, STOPPING!\n!!!")
+            self.logger.warning("!!! ODRIVE RECEIVED STOP COMMAND, STOPPING! !!!")
+
+            # Stop odrive
             self.odrv.axis0.controller.input_vel = 0
             self.odrv.axis1.controller.input_vel = 0
+
+            # Exit node
             raise SystemExit
 
         if(self.odrv != None):

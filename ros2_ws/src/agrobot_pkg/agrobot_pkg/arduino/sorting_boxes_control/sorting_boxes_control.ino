@@ -6,7 +6,7 @@
 #define mStop 0
 
 #define speedDelay 2 // Delay in ms between pulses
-#define openPuls 900 // Amount of pulses to open box
+#define openPuls 1000 // Amount of pulses to open box
 
 #define motorCount 4
 

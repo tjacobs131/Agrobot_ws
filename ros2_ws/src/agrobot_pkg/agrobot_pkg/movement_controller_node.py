@@ -16,7 +16,7 @@ class MovementControllerNode(Node):
     detected_crop = None # Holds object which is currently being collected
     detected_marker = False # Holds whether a marker is currently detected
 
-    calibration_time = 10 # Time to wait before starting (seconds)
+    calibration_time = 15 # Time to wait before starting (seconds)
     
     movement_speed = 4.0
     adjustment_movement_speed = 2.0
@@ -203,7 +203,6 @@ class MovementControllerNode(Node):
 
     def execute_collection_bucket_command(self, command):
         self.logger.info("Executing arduino command: " + command)
-        instruction_count = len(command.split(','))
         
         if(self.serial_com == None):
             self.logger.error("Arduino not connected")
@@ -214,6 +213,7 @@ class MovementControllerNode(Node):
 
         # Wait for !OK responses
         output = b""
+        instruction_count = len(command.split(','))
         count = 0
         while (count < instruction_count):
             output += self.serial_com.readline()
