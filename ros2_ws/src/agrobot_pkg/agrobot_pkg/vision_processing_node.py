@@ -1,5 +1,6 @@
 import os
 from ultralytics import YOLO
+import numpy as np
 import cv2
 import math
 import rclpy
@@ -15,6 +16,9 @@ class VisionProcessingNode(Node):
     closest_crop_x = 0.0
     closest_crop_y = 0.0
 
+    minimum_marker_spot_frames = 3
+    marker_spot_frames = 0
+
     def __init__(self):
 
         # Set up node
@@ -23,7 +27,8 @@ class VisionProcessingNode(Node):
         self.__node = rclpy.create_node('vision_processing_node')
 
         # Set up publishers
-        self.publisher = self.create_publisher(VisionPublishClosestCrop, 'detected_crop', 10)
+        self.crop_publisher = self.create_publisher(VisionPublishClosestCrop, 'detected_crop', 10)
+        self.marker_publisher = self.create_publisher(String, 'detected_marker', 1)
 
         # Set up service
         self.__node.create_service(UpdateCropLocation, 'update_crop_location', self.__update_crop_location_callback)
@@ -32,6 +37,32 @@ class VisionProcessingNode(Node):
         self.logger.info("Start vision processing")
 
         self.detect_object() # Start pathfinding script
+
+    def detect_marker(self, img):
+        # Define color range
+        lower = np.array([76, 198, 144], dtype=np.uint8)
+        upper = np.array([127, 255, 216], dtype=np.uint8)
+
+        # Convert to HSV
+        hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+
+        self.image_hsv = hsv
+
+        # Create mask
+        mask = cv2.inRange(hsv, lower, upper)
+
+        mask_size = cv2.countNonZero(mask)
+
+        if(mask_size > 2000):
+            self.logger.info("Marker detected")
+
+            if(self.marker_spot_frames >= self.minimum_marker_spot_frames):
+                self.publish_marker_info()
+                self.marker_spot_frames = 0
+
+            self.marker_spot_frames += 1
+        else:
+            self.marker_spot_frames = 0
 
     def detect_object(self):
         # start webcam
@@ -57,64 +88,69 @@ class VisionProcessingNode(Node):
             return last_object_details
 
         while True:
-            success, img = cap.read()
-            
-            if(not success):
-                continue
+            try: 
+                success, img = cap.read()
+                
+                if(not success):
+                    continue
 
-            results = model(img, stream=True)
+                self.detect_marker(img)
 
-            sleep(0.01)
+                results = model(img, stream=True)
 
-            # coordinates
-            for r in results:
-                boxes = r.boxes
+                sleep(0.1)
 
-                for box in boxes:
-                    # confidence
-                    confidence = math.ceil((box.conf[0] * 100)) / 100
+                # coordinates
+                for r in results:
+                    boxes = r.boxes
 
-                    if confidence <= 0.85:
-                        continue
+                    for box in boxes:
+                        # confidence
+                        confidence = math.ceil((box.conf[0] * 100)) / 100
 
-                    # bounding box
-                    x1, y1, x2, y2 = box.xyxy[0]
-                    x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)  # convert to int values
-                    #print("Bounding Box --->", (x1, y1, x2, y2))
+                        if confidence <= 0.85:
+                            continue
 
-                    # update last detected object details
-                    last_object_details = {
-                        "bounding_box": (x1, y1, x2, y2),
-                        "confidence": confidence,
-                        "class_name": classNames[int(box.cls[0])]
-                    }
+                        # bounding box
+                        x1, y1, x2, y2 = box.xyxy[0]
+                        x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)  # convert to int values
+                        #print("Bounding Box --->", (x1, y1, x2, y2))
 
-                    # put box in cam
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)                    
+                        # update last detected object details
+                        last_object_details = {
+                            "bounding_box": (x1, y1, x2, y2),
+                            "confidence": confidence,
+                            "class_name": classNames[int(box.cls[0])]
+                        }
 
-                    self.publish_crop_info(crop_type=last_object_details.get('class_name'), crop_x=x1, crop_y=y1)
-                    self.closest_crop_type = last_object_details.get('class_name')
-                    self.closest_crop_x = x1
-                    self.closest_crop_y = y1
+                        # put box in cam
+                        cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)                    
 
-                    # class name
-                    cls = int(box.cls[0])
+                        self.publish_crop_info(crop_type=last_object_details.get('class_name'), crop_x=x1, crop_y=y1)
+                        self.closest_crop_type = last_object_details.get('class_name')
+                        self.closest_crop_x = x1
+                        self.closest_crop_y = y1
 
-                    # object details
-                    org = [x1, y1]
-                    font = cv2.FONT_HERSHEY_SIMPLEX
-                    fontScale = 1
-                    color = (255, 0, 0)
-                    thickness = 2
+                        # class name
+                        cls = int(box.cls[0])
 
-                    cv2.putText(img, classNames[cls], org, font, fontScale, color, thickness)
+                        # object details
+                        org = [x1, y1]
+                        font = cv2.FONT_HERSHEY_SIMPLEX
+                        fontScale = 1
+                        color = (255, 0, 0)
+                        thickness = 2
 
-            cv2.imshow('Webcam', img)
-            if cv2.waitKey(1) == ord('q'):
-                break
+                        cv2.putText(img, classNames[cls], org, font, fontScale, color, thickness)
 
-        cap.release()
-        cv2.destroyAllWindows()
+                cv2.imshow('Webcam', img)
+
+                if cv2.waitKey(1) == ord('q'):
+                    break
+
+            except KeyboardInterrupt:
+                cap.release()
+                cv2.destroyAllWindows()      
 
 
     def publish_crop_info(self, crop_type, crop_x, crop_y):
@@ -124,7 +160,15 @@ class VisionProcessingNode(Node):
         msg.crop_x = crop_x
         msg.crop_y = crop_y
 
-        self.publisher.publish(msg)
+        self.crop_publisher.publish(msg)
+
+    def publish_marker_info(self):
+        # Create message
+        self.logger.info("--- Publishing detected marker ---")
+        msg = String()
+        msg.data = "Marker detected"
+
+        self.marker_publisher.publish(msg)
 
     def __update_crop_location_callback(self, request, response):
         response.crop_type = self.closest_crop_type
