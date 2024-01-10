@@ -118,12 +118,11 @@ void loop() {
   // Read from serial
   // Put result into buffer
   receiveBufferSize = 0;
-  if(Serial.available() > 3){
-      while (Serial.available() > 0) {
-      receiveBuffer[receiveBufferSize] = char(Serial.read());
-      if (receiveBufferSize < buffSize - 1) {
-        receiveBufferSize++;
-      }
+  while (Serial.available() > 0) {
+    delay(2);
+    receiveBuffer[receiveBufferSize] = char(Serial.read());
+    if (receiveBufferSize < buffSize - 1) {
+      receiveBufferSize++;
     }
   }
 
