@@ -16,14 +16,17 @@ class MovementControllerNode(Node):
     detected_crop = None # Holds object which is currently being collected
     detected_marker = False # Holds whether a marker is currently detected
 
-    calibration_time = 15 # Time to wait before starting (seconds)
+    calibration_time = 8 # Time to wait before starting (seconds)
     
     movement_speed = 4.0
+    full_speed_braking_force = -4.0
+    full_speed_braking_time = 6.0
     adjustment_movement_speed = 2.0
-    braking_force = -2.0
+    adjustment_speed_braking_force = -2.0
+    adjustment_speed_braking_time = 3.0
 
     target_crop_y = 100 # Position at which the robot should stop (expected crop location)
-    adjustment_count_target = 3 # Adjustment iterations to perform
+    adjustment_count_target = 5 # Adjustment iterations to perform
     adjustment_count = 0 # Current adjustment iteration
 
     serial_com = None
@@ -71,6 +74,7 @@ class MovementControllerNode(Node):
                 self.detected_crop = None
             else:
                 self.detected_crop = object
+                self.logger.info("Crop location: " + str(self.detected_crop.crop_x) + ", " + str(self.detected_crop.crop_y))
 
     def __update_marker(self, marker):
         self.detected_marker = True
@@ -109,11 +113,11 @@ class MovementControllerNode(Node):
 
             self.logger.info("Detected crop, stopping")
             # Apply braking force
-            self.execute_movement_command(self.braking_force)
-            self.wait(2)
+            self.execute_movement_command(self.full_speed_braking_force)
+            self.wait(self.full_speed_braking_time)
             
             # Stop
-            self.execute_movement_command(0)
+            self.execute_movement_command(0.0)
 
             # Start adjustment loop
             self.adjustment_count = 0
@@ -128,11 +132,14 @@ class MovementControllerNode(Node):
         target_diff = abs(crop_y - self.target_crop_y)
         
         # Calculate time to move
-        target_time = (abs(target_diff)) / 40 # Convert crop distance to time to move
+        target_time = (abs(target_diff)) / 30 # Convert crop distance to time to move
 
         self.logger.info("Target position difference: " + str(target_diff))
         self.logger.info("Target time: " + str(target_time))
         self.logger.info("Iteration: " + str(self.adjustment_count))
+
+        if(target_time < 0.3):
+            self.adjustment_count = self.adjustment_count_target
 
         # Determine direction to move
         if(crop_y < self.target_crop_y):
@@ -144,7 +151,8 @@ class MovementControllerNode(Node):
         self.wait(target_time)
         
         # Stop
-        self.execute_movement_command(0)
+        self.execute_movement_command(0.0)
+        self.wait(self.adjustment_speed_braking_time)
 
         self.adjustment_count += 1
         if self.adjustment_count < self.adjustment_count_target: # If not done adjusting
@@ -178,17 +186,17 @@ class MovementControllerNode(Node):
             self.logger.info("Detected marker, stopping")
 
             # Apply braking force
-            self.execute_movement_command(self.braking_force)
-            self.wait(1)
+            self.execute_movement_command(self.full_speed_braking_force)
+            self.wait(self.full_speed_braking_time)
             
             # Stop
-            self.execute_movement_command(0)
+            self.execute_movement_command(0.0)
 
             self.logger.info("Delivering")
             self.execute_movement_command(self.adjustment_movement_speed)
             self.wait(2)
 
-            self.execute_movement_command(0)
+            self.execute_movement_command(0.0)
 
             self.logger.info("Opening boxes")
             self.execute_collection_bucket_command("!1O,4O\n")

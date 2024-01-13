@@ -55,6 +55,8 @@ class SimulationControllerNode:
 
     # Runs when the topic cmd_vel recieves a message
     def __cmd_vel_callback(self, twist):
+        twist.linear.x = -twist.linear.x * 10
+        twist.linear.y = -twist.linear.y * 10
         self.__target_twist = twist
 
     def __update_objects(self, objects):
@@ -104,6 +106,9 @@ class SimulationControllerNode:
         # Publish detected objects
         detected_objects = self.__camera.getRecognitionObjects()
 
+        self.publish_closest_crop(detected_objects)
+
+    def publish_closest_crop(self, detected_objects):
         if len(detected_objects) > 0:
             # Find closest object
             target_x = 1.15
@@ -113,15 +118,13 @@ class SimulationControllerNode:
                 if closest_obj == None:
                     closest_obj = obj
                     continue;
-                elif abs(math.dist(closest_obj.getPosition()[2], target_x)) > abs(math.dist(obj.getPosition()[2], target_x)):
-                    # Current object is closer to target than closest
+                elif abs(closest_obj.getPosition()[2] - target_x) > abs(obj.getPosition()[2] - target_x):                    # Current object is closer to target than closest
                     closest_obj = obj
-            
             # Publish closest object
             if closest_obj != None:
                 msg = VisionPublishClosestCrop()
                 msg.crop_type = "lettuce"
-                msg.crop_x = closest_obj.getPosition()[2]
-                msg.crop_y = closest_obj.getPosition()[1]
+                msg.crop_y = abs(int(closest_obj.getPosition()[2] * 100 + 50))
+                msg.crop_x = abs(int(closest_obj.getPosition()[1] * 100))
 
                 self.__node.closest_crop_publisher.publish(msg)
