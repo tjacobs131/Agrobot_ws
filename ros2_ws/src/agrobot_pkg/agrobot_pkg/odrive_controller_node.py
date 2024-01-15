@@ -43,16 +43,20 @@ class ODriveControllerNode(Node):
                 time.sleep(0.1)
 
             self.odrv.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL # Enable closed loop control
+            self.odrv.axis0.controller.config.control_mode = CONTROL_MODE_VELOCITY_CONTROL
+
 
             while(self.odrv.axis1.current_state != AXIS_STATE_IDLE): # Wait for calibration to finish
                 time.sleep(0.1)
 
             self.odrv.axis1.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL # Enable closed loop control
+            self.odrv.axis1.controller.config.control_mode = CONTROL_MODE_VELOCITY_CONTROL
 
             self.logger.info("Finished ODrive calibration")
 
     def __process_velocity_command(self, cmd):
         self.logger.info("ODrive received: " + str(cmd.linear.x))
+        self.logger.info("Found odrive, bus voltage: " + str(self.odrv.vbus_voltage))
 
         if(cmd.angular.x == -99.0 
            and cmd.angular.y == -99.0 
@@ -64,6 +68,9 @@ class ODriveControllerNode(Node):
             # Stop odrive
             self.odrv.axis0.controller.input_vel = 0
             self.odrv.axis1.controller.input_vel = 0
+
+            self.odrv.axis0.requested_state = AXIS_STATE_IDLE
+            self.odrv.axis1.requested_state = AXIS_STATE_IDLE
 
             # Exit node
             raise SystemExit
