@@ -74,7 +74,7 @@ class VisionProcessingNode(Node):
         script_path = os.path.dirname(os.path.realpath(__file__))
 
         # Weights are located in /resource/weights/best.pt
-        weights_path = os.path.abspath(os.path.join(script_path, '..', '..', '..', '..', 'share', 'agrobot_pkg', 'resource', 'weights', 'best.pt'))
+        weights_path = os.path.abspath(os.path.join(script_path, '..', '..', '..', '..', 'share', 'agrobot_pkg', 'resource', 'weights', 'Duarte.pt'))
 
         # model
         model = YOLO(weights_path)
@@ -143,6 +143,12 @@ class VisionProcessingNode(Node):
                         thickness = 2
 
                         cv2.putText(img, classNames[cls], org, font, fontScale, color, thickness)
+
+                        bottom_right_x = x1 + 50
+                        bottom_right_y = y1 + 50
+
+                        # Draw a black rectangle on the frame to mask the area
+                        cv2.rectangle(img, (x1, y1), (bottom_right_x, bottom_right_y), (0, 0, 0), -1)
 
                 cv2.imshow('Webcam', img)
 
