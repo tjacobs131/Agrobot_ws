@@ -18,6 +18,10 @@ class ODriveControllerNode(Node):
         # Set up subscribers
         self.command_subsciption = self.create_subscription(Twist, "/cmd_vel", self.__process_velocity_command, 10)
 
+        # Set up position adjustment timer
+        self.adjustment_timer = self.create_timer(0.5, self.__adjust_odrive_velocity)
+        self.adjustment_timer.cancel()
+
         try:
             # Set up odrive
             self.odrv = odrive.find_any(timeout=1)
@@ -64,6 +68,7 @@ class ODriveControllerNode(Node):
 
     def __process_velocity_command(self, cmd):
         self.logger.info("ODrive received command: " + str(cmd.linear.x))
+        self.adjustment_timer.reset()
 
         if(cmd.angular.x == -99.0 
            and cmd.angular.y == -99.0 
@@ -71,6 +76,8 @@ class ODriveControllerNode(Node):
             
             # EMERGENCY STOP COMMAND
             self.logger.warning("!!! ODRIVE RECEIVED STOP COMMAND, STOPPING! !!!")
+
+            self.adjustment_timer.cancel()
 
             # Stop odrive
             self.odrv.axis0.controller.input_vel = 0
@@ -88,6 +95,12 @@ class ODriveControllerNode(Node):
             raise SystemExit
 
         if(self.odrv != None):
+            if cmd.linear.x == 0.0: # If velocity is 0, stop adjusting
+                self.adjustment_timer.cancel()
+            else:
+                self.adjustment_timer.reset()
+            
+
             velocity = cmd.linear.x
 
             self.odrv.axis0.controller.input_vel = velocity # - 1
