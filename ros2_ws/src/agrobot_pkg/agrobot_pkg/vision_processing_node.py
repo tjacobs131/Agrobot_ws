@@ -98,8 +98,6 @@ class VisionProcessingNode(Node):
         while True:
             try: 
                 success, img = cap.read()
-                
-                
 
                 if(not success):
                     continue
@@ -147,15 +145,19 @@ class VisionProcessingNode(Node):
 
             except KeyboardInterrupt:
                 cap.release()
-                cv2.destroyAllWindows()      
+                cv2.destroyAllWindows()     
+
+        rclpy.spin_once(self) 
 
 
-    def publish_crop_info(self, crop_type, crop_x, crop_y):
+    def publish_crop_info(self, crop_type, crop_x, crop_y, crop_x2, crop_y2):
         # Create message
         msg = VisionPublishClosestCrop()
         msg.crop_type = crop_type
         msg.crop_x = crop_x
         msg.crop_y = crop_y
+        msg.crop_x2 = crop_x2
+        msg.crop_y2 = crop_y2
 
         self.crop_publisher.publish(msg)
 
@@ -168,6 +170,9 @@ class VisionProcessingNode(Node):
         self.marker_publisher.publish(msg)
 
     def __ignore_box(self, object):
+        self.logger.info("Ignoring box")
+        self.logger.info("Crop x: " + str(object.crop_x))
+        self.logger.info("Crop type: " + str(object.crop_type))
         self.saved_boxes.append((object.x1, object.y1, object.x2, object.y2))
 
 def main(args=None):
