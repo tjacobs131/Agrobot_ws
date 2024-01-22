@@ -12,6 +12,10 @@ from agrobot_msgs.srv import UpdateCropLocation
 
 class VisionProcessingNode(Node):
 
+    cap = None
+    model = None
+    classNames = ["Beetroot", "Carrot", "Lettuce", "Radish"]
+
     minimum_marker_spot_frames = 3
     marker_spot_frames = 0
 
@@ -33,6 +37,10 @@ class VisionProcessingNode(Node):
         
         self.logger = self.get_logger() # Set up logger
         self.logger.info("Start vision processing")
+
+        # Set up loop timer
+        self.process_frame_timer = self.create_timer(0.1, self.process_frame)
+        self.process_frame_timer.cancel()
 
         self.detect_object() # Start pathfinding script
 
@@ -72,14 +80,13 @@ class VisionProcessingNode(Node):
 
     def detect_object(self):
         # start webcam
-        cap = cv2.VideoCapture("/dev/v4l/by-id/usb-webcamvendor_webcamproduct_00000000-video-index0")
+        self.cap = cv2.VideoCapture(2)
 
-        if not cap.isOpened():
+        if not self.cap.isOpened():
             self.logger.warn("Cannot open camera")
 
-
-        cap.set(3, 1920)
-        cap.set(4, 1080)
+        self.cap.set(3, 1920)
+        self.cap.set(4, 1080)
 
         script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -87,24 +94,25 @@ class VisionProcessingNode(Node):
         weights_path = os.path.abspath(os.path.join(script_path, '..', '..', '..', '..', 'share', 'agrobot_pkg', 'resource', 'weights', 'Duarte.pt'))
 
         # model
-        model = YOLO(weights_path)
-
-        # object classes
-        classNames = ["Beetroot", "Carrot", "Lettuce", "Radish"]
+        self.model = YOLO(weights_path)
 
         # last detected object details
         last_object_details = None
 
+        # Start loop
+        self.process_frame_timer.reset()
+
+    def process_frame(self):
         while True:
             try: 
-                success, img = cap.read()
+                success, img = self.cap.read()
 
                 if(not success):
                     continue
 
                 self.detect_marker(img)
 
-                results = model(img, stream=True)
+                results = self.model(img, stream=True)
 
                 #sleep(0.1)
 
@@ -124,7 +132,7 @@ class VisionProcessingNode(Node):
                             last_object_details = {
                                 "bounding_box": (x1, y1, x2, y2),
                                 "confidence": confidence,
-                                "class_name": classNames[int(box.cls[0])]
+                                "class_name": self.classNames[int(box.cls[0])]
                             }
 
                             cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
@@ -134,9 +142,7 @@ class VisionProcessingNode(Node):
                         org = [x1, y1]
                         font = cv2.FONT_HERSHEY_SIMPLEX
                         color = (255, 0, 0)
-                        cv2.putText(img, classNames[cls] + " " + str(confidence), org, font, 1, color, 2)
-
-                        
+                        cv2.putText(img, self.classNames[cls] + " " + str(confidence), org, font, 1, color, 2)
 
                 cv2.imshow('Webcam', img)
 
@@ -144,11 +150,8 @@ class VisionProcessingNode(Node):
                     break
 
             except KeyboardInterrupt:
-                cap.release()
-                cv2.destroyAllWindows()     
-
-        rclpy.spin_once(self) 
-
+                self.cap.release()
+                cv2.destroyAllWindows() 
 
     def publish_crop_info(self, crop_type, crop_x, crop_y, crop_x2, crop_y2):
         # Create message
