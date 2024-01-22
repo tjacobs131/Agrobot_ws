@@ -50,10 +50,10 @@ class MovementControllerNode(Node):
         self.logger.info("Start movement controller")
 
         # Set up communication port to Arduino
-        ports = glob.glob('/dev/tty[A-Za-z]*')
-        for port in ports:
-            if "ACM" in port:
-                self.serial_com = serial.Serial(port, 9600, write_timeout=0.5)  
+        ports = list(serial.tools.list_ports.comports())
+        for p in ports:
+            if "Arduino" in p.manufacturer:
+                self.serial_com = serial.Serial(p.device, 9600, write_timeout=0.5)  
                 self.logger.info("Connected to arduino")
                 break
 
