@@ -12,12 +12,10 @@ from agrobot_msgs.srv import UpdateCropLocation
 
 class VisionProcessingNode(Node):
 
-    closest_crop_type = None
-    closest_crop_x = 0.0
-    closest_crop_y = 0.0
-
     minimum_marker_spot_frames = 3
     marker_spot_frames = 0
+
+    saved_boxes = []
 
     def __init__(self):
 
@@ -30,14 +28,23 @@ class VisionProcessingNode(Node):
         self.crop_publisher = self.create_publisher(VisionPublishClosestCrop, 'detected_crop', 10)
         self.marker_publisher = self.create_publisher(String, 'detected_marker', 1)
 
-        # Set up service
-        self.__node.create_service(UpdateCropLocation, 'update_crop_location', self.__update_crop_location_callback)
+        # Set up subscribers
+        self.create_subscription(VisionPublishClosestCrop, 'harvested_crop', self.__ignore_box, 1)
         
         self.logger = self.get_logger() # Set up logger
         self.logger.info("Start vision processing")
 
         self.detect_object() # Start pathfinding script
 
+        # Function to check if a box overlaps with any saved box
+    def is_overlap(self, new_box):
+        x1_new, y1_new, x2_new, y2_new = new_box
+        for box in self.saved_boxes:
+            x1, y1, x2, y2 = box
+            if not (x2_new < x1 or x2 < x1_new or y2_new < y1 or y2 < y1_new):
+                return True
+        return False
+    
     def detect_marker(self, img):
         # Define color range
         lower = np.array([76, 198, 144], dtype=np.uint8)
@@ -88,13 +95,12 @@ class VisionProcessingNode(Node):
         # last detected object details
         last_object_details = None
 
-        def get_last_object_details():
-            return last_object_details
-
         while True:
             try: 
                 success, img = cap.read()
                 
+                
+
                 if(not success):
                     continue
 
@@ -104,54 +110,35 @@ class VisionProcessingNode(Node):
 
                 #sleep(0.1)
 
-                # coordinates
                 for r in results:
                     boxes = r.boxes
 
                     for box in boxes:
-                        # confidence
                         confidence = math.ceil((box.conf[0] * 100)) / 100
 
-                        if confidence <= 0.65:
+                        if confidence <= 0.60:
                            continue
 
-                        # bounding box
-                        x1, y1, x2, y2 = box.xyxy[0]
-                        x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)  # convert to int values
+                        x1, y1, x2, y2 = map(int, box.xyxy[0])
                         #print("Bounding Box --->", (x1, y1, x2, y2))
 
-                        # update last detected object details
-                        last_object_details = {
-                            "bounding_box": (x1, y1, x2, y2),
-                            "confidence": confidence,
-                            "class_name": classNames[int(box.cls[0])]
-                        }
+                        if not self.is_overlap((x1, y1, x2, y2)):
+                            last_object_details = {
+                                "bounding_box": (x1, y1, x2, y2),
+                                "confidence": confidence,
+                                "class_name": classNames[int(box.cls[0])]
+                            }
 
-                        # put box in cam
-                        cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)                    
+                            cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+                            self.publish_crop_info(crop_type=last_object_details['class_name'], crop_x=x1, crop_y=y1, crop_x2=x2, crop_y2=y2)
 
-                        self.publish_crop_info(crop_type=last_object_details.get('class_name'), crop_x=x1, crop_y=y1)
-                        self.closest_crop_type = last_object_details.get('class_name')
-                        self.closest_crop_x = x1
-                        self.closest_crop_y = y1
-
-                        # class name
                         cls = int(box.cls[0])
-
-                        # object details
                         org = [x1, y1]
                         font = cv2.FONT_HERSHEY_SIMPLEX
-                        fontScale = 1
                         color = (255, 0, 0)
-                        thickness = 2
+                        cv2.putText(img, classNames[cls] + " " + str(confidence), org, font, 1, color, 2)
 
-                        cv2.putText(img, classNames[cls], org, font, fontScale, color, thickness)
-
-                        bottom_right_x = x1 + 50
-                        bottom_right_y = y1 + 50
-
-                        # Draw a black rectangle on the frame to mask the area
-                        cv2.rectangle(img, (x1, y1), (bottom_right_x, bottom_right_y), (0, 0, 0), -1)
+                        
 
                 cv2.imshow('Webcam', img)
 
@@ -180,12 +167,8 @@ class VisionProcessingNode(Node):
 
         self.marker_publisher.publish(msg)
 
-    def __update_crop_location_callback(self, request, response):
-        response.crop_type = self.closest_crop_type
-        response.crop_x = self.closest_crop_x
-        response.crop_y = self.closest_crop_y
-
-        return response
+    def __ignore_box(self, object):
+        self.saved_boxes.append((object.x1, object.y1, object.x2, object.y2))
 
 def main(args=None):
     rclpy.init(args=args)
