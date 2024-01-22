@@ -65,7 +65,8 @@ class VisionProcessingNode(Node):
 
     def detect_object(self):
         # start webcam
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture("/dev/v4l/by-id/usb-webcamvendor_webcamproduct_00000000-video-index0")
+
 
         cap.set(3, 1920)
         cap.set(4, 1080)
