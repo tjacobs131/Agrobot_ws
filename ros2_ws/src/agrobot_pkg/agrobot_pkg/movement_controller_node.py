@@ -16,18 +16,19 @@ class MovementControllerNode(Node):
     detected_crop = None # Holds object which is currently being collected
     detected_marker = False # Holds whether a marker is currently detected
 
-    calibration_time = 20 # Time to wait before starting (seconds)
+    calibration_time = 13 # Time to wait before starting (seconds)
     
-    movement_speed = 1.0
-    full_speed_braking_force = -2.0
-    full_speed_braking_time = 2.0
+    movement_speed = 0.5
+    full_speed_braking_force = -0.2
+    full_speed_braking_time = 1.0
 
-    adjustment_movement_speed = 1.0
-    adjustment_speed_braking_force = -1.0
-    adjustment_speed_braking_time = 1.0
+    adjustment_movement_speed = 0.2
+    adjustment_speed_braking_force = -0.1
+    adjustment_speed_braking_time = 0.5
 
-    target_crop_y = 100 # Position at which the robot should stop (expected crop location)
-    adjustment_count_target = 2 # Adjustment iterations to perform
+    target_crop_y = 650 # Position at which the robot should stop (expected crop location)
+    max_crop_y_difference = 5 # Maximum crop position difference to stop at (in pixels)
+    adjustment_count_target = 1 # Adjustment iterations to perform
     adjustment_count = 0 # Current adjustment iteration
 
     serial_com = None
@@ -49,10 +50,10 @@ class MovementControllerNode(Node):
         self.logger.info("Start movement controller")
 
         # Set up communication port to Arduino
-        ports = glob.glob('/dev/tty[A-Za-z]*')
-        for port in ports:
-            if "ACM" in port:
-                self.serial_com = serial.Serial(port, 9600, write_timeout=0.5)  
+        ports = list(serial.tools.list_ports.comports())
+        for p in ports:
+            if "Arduino" in p.manufacturer:
+                self.serial_com = serial.Serial(p.device, 9600, write_timeout=0.5)  
                 self.logger.info("Connected to arduino")
                 break
 
@@ -110,19 +111,21 @@ class MovementControllerNode(Node):
 
         # If there is no object detected, keep driving
         if self.detected_crop != None:
-            self.harvest_timer.cancel() # Crop found, stop looking
+            self.logger.info("Detected crop, slowing down")
+            # Slow down
+            self.execute_movement_command(self.adjustment_movement_speed)
 
-            self.logger.info("Detected crop, stopping")
-            # Apply braking force
-            self.execute_movement_command(self.full_speed_braking_force)
-            self.wait(self.full_speed_braking_time)
+            if(self.detected_crop.crop_y <= self.target_crop_y):
+                self.execute_movement_command(0.0)
+                self.logger.info("Crop in position, stopping")
+
+                # diff = abs(self.detected_crop.crop_y - self.target_crop_y)
+                
+                # if(diff > self.max_crop_y_difference):
+                #     # Start adjustment loop
+                #     self.adjustment_count = 0
+                #     self.adjustment_timer.reset()
             
-            # Stop
-            self.execute_movement_command(0.0)
-
-            # Start adjustment loop
-            self.adjustment_count = 0
-            self.adjustment_timer.reset()
 
     def adjust_position(self):
 
@@ -147,7 +150,7 @@ class MovementControllerNode(Node):
             return
 
         # Determine direction to move
-        if(crop_y < self.target_crop_y):
+        if(crop_y > self.target_crop_y):
             self.execute_movement_command(self.adjustment_movement_speed * multiplier) # Adjust forwards
         else:
             self.execute_movement_command(-self.adjustment_movement_speed * multiplier) # Adjust backwards

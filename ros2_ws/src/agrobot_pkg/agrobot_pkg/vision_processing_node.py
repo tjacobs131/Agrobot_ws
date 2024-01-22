@@ -67,6 +67,9 @@ class VisionProcessingNode(Node):
         # start webcam
         cap = cv2.VideoCapture("/dev/v4l/by-id/usb-webcamvendor_webcamproduct_00000000-video-index0")
 
+        if not cap.isOpened():
+            self.logger.warn("Cannot open camera")
+
 
         cap.set(3, 1920)
         cap.set(4, 1080)
@@ -80,7 +83,7 @@ class VisionProcessingNode(Node):
         model = YOLO(weights_path)
 
         # object classes
-        classNames = ["beetroot", "carrot", "lettuce", "radish"]
+        classNames = ["Beetroot", "Carrot", "Lettuce", "Radish"]
 
         # last detected object details
         last_object_details = None
@@ -99,7 +102,7 @@ class VisionProcessingNode(Node):
 
                 results = model(img, stream=True)
 
-                sleep(0.1)
+                #sleep(0.1)
 
                 # coordinates
                 for r in results:
@@ -109,8 +112,8 @@ class VisionProcessingNode(Node):
                         # confidence
                         confidence = math.ceil((box.conf[0] * 100)) / 100
 
-                        if confidence <= 0.70:
-                            continue
+                        if confidence <= 0.65:
+                           continue
 
                         # bounding box
                         x1, y1, x2, y2 = box.xyxy[0]
