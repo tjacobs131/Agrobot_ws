@@ -65,7 +65,7 @@ class VisionProcessingNode(Node):
 
     def detect_object(self):
         # start webcam
-        cap = cv2.VideoCapture(" usb-webcamvendor_webcamproduct_00000000-video-index0")
+        cap = cv2.VideoCapture("/dev/v4l/by-id/usb-webcamvendor_webcamproduct_00000000-video-index0")
 
         if not cap.isOpened():
             self.logger.warn("Cannot open camera")
