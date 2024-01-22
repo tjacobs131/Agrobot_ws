@@ -18,7 +18,7 @@ class MovementControllerNode(Node):
 
     calibration_time = 20 # Time to wait before starting (seconds)
     
-    movement_speed = 1.0
+    movement_speed = 0.5
     full_speed_braking_force = -2.0
     full_speed_braking_time = 2.0
 
@@ -27,7 +27,8 @@ class MovementControllerNode(Node):
     adjustment_speed_braking_time = 1.0
 
     target_crop_y = 100 # Position at which the robot should stop (expected crop location)
-    adjustment_count_target = 2 # Adjustment iterations to perform
+    max_crop_y_difference = 5 # Maximum crop position difference to stop at (in pixels)
+    adjustment_count_target = 1 # Adjustment iterations to perform
     adjustment_count = 0 # Current adjustment iteration
 
     serial_com = None
@@ -112,17 +113,21 @@ class MovementControllerNode(Node):
         if self.detected_crop != None:
             self.harvest_timer.cancel() # Crop found, stop looking
 
-            self.logger.info("Detected crop, stopping")
-            # Apply braking force
-            self.execute_movement_command(self.full_speed_braking_force)
-            self.wait(self.full_speed_braking_time)
-            
-            # Stop
-            self.execute_movement_command(0.0)
+            self.logger.info("Detected crop, slowing down")
+            # Slow down
+            self.execute_movement_command(self.adjustment_movement_speed)
 
-            # Start adjustment loop
-            self.adjustment_count = 0
-            self.adjustment_timer.reset()
+            if(self.detected_crop.crop_y >= self.target_crop_y):
+                self.execute_movement_command(0.0)
+                self.logger.info("Crop in position, stopping")
+
+                diff = abs(self.detected_crop.crop_y - self.target_crop_y)
+                
+                if(diff > self.max_crop_y_difference):
+                    # Start adjustment loop
+                    self.adjustment_count = 0
+                    self.adjustment_timer.reset()
+            
 
     def adjust_position(self):
 

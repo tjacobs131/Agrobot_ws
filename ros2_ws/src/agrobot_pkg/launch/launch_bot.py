@@ -44,10 +44,21 @@ def generate_launch_description():
         executable="vision_processing_node"
     )
 
+    emergency_stop = ExecuteProcess(
+        cmd=[
+            'gnome-terminal', '--',
+            'ros2', 'run',
+            'agrobot_pkg', 'stop_robot_node'
+        ],
+        name='emergency_stop',
+        output='screen'
+    )
+
     return LaunchDescription([
         odrive_controller,
-        vision_controller,
         movement_controller,
+        vision_controller,
+        emergency_stop,
         RegisterEventHandler(
             OnShutdown(
                 on_shutdown=[
