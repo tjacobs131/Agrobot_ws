@@ -15,10 +15,13 @@ class VisionProcessingNode(Node):
     model = None
     classNames = ["Beetroot", "Carrot", "Lettuce", "Radish"]
 
+     # Define color range
+    lower = np.array([145, 175, 170], dtype=np.uint16)
+    upper = np.array([185, 215, 280], dtype=np.uint16)
     minimum_marker_spot_frames = 3
     marker_spot_frames = 0
 
-    saved_boxes = []
+    saved_boxes = []    
 
     def __init__(self):
 
@@ -53,17 +56,18 @@ class VisionProcessingNode(Node):
         return False
     
     def detect_marker(self, img):
-        # Define color range
-        lower = np.array([76, 198, 144], dtype=np.uint8)
-        upper = np.array([127, 255, 216], dtype=np.uint8)
-
         # Convert to HSV
         hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
 
-        self.image_hsv = hsv
-
         # Create mask
-        mask = cv2.inRange(hsv, lower, upper)
+        mask = cv2.inRange(hsv, self.lower, self.upper)
+
+        # Find contours
+        contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        self.logger.info("Number of contours: " + str(len(contours)))
+        
+        cv2.drawContours(hsv, contours, -1, (0, 255, 0), 3)
 
         mask_size = cv2.countNonZero(mask)
 
@@ -102,55 +106,54 @@ class VisionProcessingNode(Node):
         self.process_frame_timer.reset()
 
     def process_frame(self):
-        while True:
-            try: 
-                success, img = self.cap.read()
+        try: 
+            success, img = self.cap.read()
 
-                if(not success):
-                    continue
+            if(not success):
+                return
 
-                self.detect_marker(img)
+            self.detect_marker(img)
 
-                results = self.model(img, stream=True)
+            results = self.model(img, stream=True)
 
-                #sleep(0.1)
+            #sleep(0.1)
 
-                for r in results:
-                    boxes = r.boxes
+            for r in results:
+                boxes = r.boxes
 
-                    for box in boxes:
-                        confidence = math.ceil((box.conf[0] * 100)) / 100
+                for box in boxes:
+                    confidence = math.ceil((box.conf[0] * 100)) / 100
 
-                        if confidence <= 0.60:
-                           continue
+                    if confidence <= 0.60:
+                        continue
 
-                        x1, y1, x2, y2 = map(int, box.xyxy[0])
-                        #print("Bounding Box --->", (x1, y1, x2, y2))
+                    x1, y1, x2, y2 = map(int, box.xyxy[0])
+                    #print("Bounding Box --->", (x1, y1, x2, y2))
 
-                        if not self.is_overlap((x1, y1, x2, y2)):
-                            last_object_details = {
-                                "bounding_box": (x1, y1, x2, y2),
-                                "confidence": confidence,
-                                "class_name": self.classNames[int(box.cls[0])]
-                            }
+                    if not self.is_overlap((x1, y1, x2, y2)):
+                        last_object_details = {
+                            "bounding_box": (x1, y1, x2, y2),
+                            "confidence": confidence,
+                            "class_name": self.classNames[int(box.cls[0])]
+                        }
 
-                            cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
-                            self.publish_crop_info(crop_type=last_object_details['class_name'], crop_x=x1, crop_y=y1, crop_x2=x2, crop_y2=y2)
+                        cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+                        self.publish_crop_info(crop_type=last_object_details['class_name'], crop_x=x1, crop_y=y1, crop_x2=x2, crop_y2=y2)
 
-                        cls = int(box.cls[0])
-                        org = [x1, y1]
-                        font = cv2.FONT_HERSHEY_SIMPLEX
-                        color = (255, 0, 0)
-                        cv2.putText(img, self.classNames[cls] + " " + str(confidence), org, font, 1, color, 2)
+                    cls = int(box.cls[0])
+                    org = [x1, y1]
+                    font = cv2.FONT_HERSHEY_SIMPLEX
+                    color = (255, 0, 0)
+                    cv2.putText(img, self.classNames[cls] + " " + str(confidence), org, font, 1, color, 2)
 
-                cv2.imshow('Webcam', img)
+            cv2.imshow('Webcam', img)
 
-                if cv2.waitKey(1) == ord('q'):
-                    break
+            if cv2.waitKey(1) == ord('q'):
+                return
 
-            except KeyboardInterrupt:
-                self.cap.release()
-                cv2.destroyAllWindows() 
+        except KeyboardInterrupt:
+            self.cap.release()
+            cv2.destroyAllWindows() 
 
     def publish_crop_info(self, crop_type, crop_x, crop_y, crop_x2, crop_y2):
         # Create message
