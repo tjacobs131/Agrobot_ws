@@ -9,6 +9,8 @@ def mouse_click(event, x, y, flags, param):
         hsv_pixel = cv2.cvtColor(np.uint8([[pixel]]), cv2.COLOR_BGR2HSV)
         hsv_color = hsv_pixel[0][0]
 
+        print("x: "+str(x) + "   y: "+str(y))
+
         print("HSV Values:", hsv_color)
 
 # Initialize webcam

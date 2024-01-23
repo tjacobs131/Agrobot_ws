@@ -18,11 +18,11 @@ class MovementControllerNode(Node):
 
     calibration_time = 13 # Time to wait before starting (seconds)
     
-    movement_speed = 0.5
+    movement_speed = 0.6
     full_speed_braking_force = -0.2
     full_speed_braking_time = 1.0
 
-    adjustment_movement_speed = 0.2
+    adjustment_movement_speed = 0.3
     adjustment_speed_braking_force = -0.1
     adjustment_speed_braking_time = 0.5
 
@@ -32,6 +32,10 @@ class MovementControllerNode(Node):
     adjustment_count = 0 # Current adjustment iteration
 
     crops_collected = 0 # Number of crops collected
+    delivery_cycle_count = 0 # Number of delivery cycles completed
+    delivery_open_command = "!1O,3O\n" # Command to open delivery boxes
+    delivery_close_command = "!1C,3C\n" # Command to close delivery boxes
+    delivery_marker_blind_time = 3.0 # Time to wait before detecting marker again after stopping (seconds)
 
     serial_com = None
 
@@ -197,12 +201,9 @@ class MovementControllerNode(Node):
 
         self.adjustment_count += 1
         if self.adjustment_count < self.adjustment_count_target: # If not done adjusting
-
             # Keep adjusting
             self.adjustment_timer.reset()
         else:
-            self.lock_detected_crop = True
-
             # Done adjusting
             self.logger.info("Done adjusting")
             
@@ -220,17 +221,26 @@ class MovementControllerNode(Node):
             # Stop
             self.execute_movement_command(0.0)
 
-            self.logger.info("Delivering")
-            self.execute_movement_command(self.adjustment_movement_speed)
-            self.wait(self.adjustment_speed_braking_time)
-
-            self.execute_movement_command(0.0)
-
             self.logger.info("Opening boxes")
-            self.execute_collection_bucket_command("!1O,4O\n")
+            self.execute_collection_bucket_command(self.delivery_open_command)
 
             self.logger.info("Closing boxes")
-            self.execute_collection_bucket_command("!1C,4C\n")
+            self.execute_collection_bucket_command(self.delivery_close_command)
+
+            self.execute_movement_command(self.adjustment_movement_speed)
+            self.wait(self.delivery_marker_blind_time)
+
+            self.detected_marker = False
+
+            self.delivery_cycle_count += 1
+            if self.delivery_cycle_count == 2:
+                self.delivery_timer.cancel()
+                return
+            else:
+                self.delivery_open_command = "!2O,4O\n"
+                self.delivery_close_command = "!2C,4C\n"
+                self.delivery_timer.reset()
+                self.execute_movement_command(self.adjustment_movement_speed)
 
     def execute_movement_command(self, speed):
         self.move_cmd = Twist()
