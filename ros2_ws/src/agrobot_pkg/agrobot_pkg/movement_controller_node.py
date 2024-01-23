@@ -129,10 +129,11 @@ class MovementControllerNode(Node):
 
             if(self.detected_crop.crop_y <= self.target_crop_y):
                 self.harvest_timer.cancel()
-                self.execute_movement_command(0.0)
                 self.logger.info("Crop in position, stopping")
 
-                self.wait(1.0)
+                self.execute_movement_command(self.adjustment_speed_braking_force)
+                self.wait(self.adjustment_speed_braking_time)
+                self.execute_movement_command(0.0)
 
                 # Call gripper service and wait for future to be complete
                 self.logger.info("Calling gripper service")
@@ -144,7 +145,7 @@ class MovementControllerNode(Node):
                 self.future = self.arm_cmd_srv.call_async(request=request, response=response)
 
                 while not response.success or not self.future.done():
-                    self.wait(0.1)
+                    self.wait(0.2)
                 
                 if(self.future.result().success):
                     self.logger.info("Gripper service returned success")

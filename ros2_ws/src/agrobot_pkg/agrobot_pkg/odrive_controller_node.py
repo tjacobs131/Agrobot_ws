@@ -86,7 +86,7 @@ class ODriveControllerNode(Node):
 
             # Wait
             start_time = default_timer()
-            while(default_timer() - start_time < 1):
+            while(default_timer() - start_time < 0.5):
                 pass
 
             self.odrv.axis0.requested_state = AXIS_STATE_IDLE

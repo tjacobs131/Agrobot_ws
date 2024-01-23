@@ -12,6 +12,9 @@ class ArmControllerNode(Node):
     crop_type = ""
 
     z_distance_to_crop = 400
+
+    y_approach_distance = 50
+
     gripper_home_rotation = 0
     gripper_back_rotation = 0
     gripper_forward_rotation = 180
@@ -83,9 +86,9 @@ class ArmControllerNode(Node):
 
         # Move arm into position
         if approach_direction == approach_direction.backward:
-            y_command = self.create_command("$APY", target - 50)
+            y_command = self.create_command("$APY", target - self.y_approach_distance)
         else:
-            y_command = self.create_command("$APY", target + 50)
+            y_command = self.create_command("$APY", target + self.y_approach_distance)
         self.execute_commands([y_command])
 
         # Close gripper
@@ -115,14 +118,6 @@ class ArmControllerNode(Node):
         self.crop_x = None
         self.crop_y = None
         self.crop_type = None
-
-    def __move_arm(self, request, response):
-        self.crop_x = request.crop_x
-        self.crop_y = request.crop_y
-        self.crop_type = request.crop_type
-        
-        response.success = True
-        return response
     
     def convert_pixel_to_coordinate(self, crop_x):
         if crop_x < 330:
@@ -131,7 +126,6 @@ class ArmControllerNode(Node):
             return 825
         else:
             return int((crop_x - 330) * 0.66)
-        
 
     def create_command(self, cmd, value=None):
         # Input string: "$APY,200"
@@ -169,6 +163,14 @@ class ArmControllerNode(Node):
         while(True):
             if(default_timer() - start_time > seconds):
                 break
+
+    def __move_arm(self, request, response):
+        self.crop_x = request.crop_x
+        self.crop_y = request.crop_y
+        self.crop_type = request.crop_type
+        
+        response.success = True
+        return response
 
 def main(args=None):
     rclpy.init(args=args)
