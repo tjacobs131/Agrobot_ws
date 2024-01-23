@@ -13,13 +13,11 @@ class VisionProcessingNode(Node):
 
     cap = None
     model = None
-    classNames = ["Beetroot", "Carrot", "Lettuce", "Radish"]
+    CLASS_NAMES = ["Beetroot", "Carrot", "Lettuce", "Radish"]
 
-     # Define color range
-    lower = np.array([145, 175, 170], dtype=np.uint16)
-    upper = np.array([185, 215, 280], dtype=np.uint16)
-    minimum_marker_spot_frames = 3
-    marker_spot_frames = 0
+    LOWER_COLOR = np.array([120, 50, 50], dtype=np.uint16)
+    UPPER_COLOR = np.array([160, 255, 255], dtype=np.uint16)
+    COLOR_MASK_COUNT = 1900
 
     saved_boxes = []    
 
@@ -54,32 +52,22 @@ class VisionProcessingNode(Node):
             if not (x2_new < x1 or x2 < x1_new or y2_new < y1 or y2 < y1_new):
                 return True
         return False
-    
-    def detect_marker(self, img):
-        # Convert to HSV
-        hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
 
-        # Create mask
-        mask = cv2.inRange(hsv, self.lower, self.upper)
+    def detect_purple(self, img):
 
-        # Find contours
-        contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        scale_percent = 25
+        width = int(img.shape[1] * scale_percent / 100)
+        height = int(img.shape[0] * scale_percent / 100)
+        dim = (width, height)
+        resized_img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
 
-        self.logger.info("Number of contours: " + str(len(contours)))
-        
-        cv2.drawContours(hsv, contours, -1, (0, 255, 0), 3)
+        hsv = cv2.cvtColor(resized_img, cv2.COLOR_BGR2HSV)
 
-        mask_size = cv2.countNonZero(mask)
+        mask = cv2.inRange(hsv, self.LOWER_COLOR, self.UPPER_COLOR)
 
-        if(mask_size > 2000):
-            self.logger.info("Marker detected")
-            self.marker_spot_frames += 1
+        if cv2.countNonZero(mask) > self.COLOR_MASK_COUNT:
+            self.publish_marker_info()
 
-            if(self.marker_spot_frames >= self.minimum_marker_spot_frames):
-                self.publish_marker_info()
-                self.marker_spot_frames = 0
-        else:
-            self.marker_spot_frames = 0
 
     def detect_object(self):
         # start webcam
@@ -99,9 +87,6 @@ class VisionProcessingNode(Node):
         # model
         self.model = YOLO(weights_path)
 
-        # last detected object details
-        last_object_details = None
-
         # Start loop
         self.process_frame_timer.reset()
 
@@ -111,14 +96,29 @@ class VisionProcessingNode(Node):
 
             if(not success):
                 return
+            
+            # ==================== Color detection (Doesnt want to work in a seperate function for some reason)
+            scale_percent = 25
+            width = int(img.shape[1] * scale_percent / 100)
+            height = int(img.shape[0] * scale_percent / 100)
+            dim = (width, height)
+            resized_img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
 
-            self.detect_marker(img)
+            hsv = cv2.cvtColor(resized_img, cv2.COLOR_BGR2HSV)
+
+            mask = cv2.inRange(hsv, self.LOWER_COLOR, self.UPPER_COLOR)
+
+            if cv2.countNonZero(mask) > self.COLOR_MASK_COUNT:
+                self.publish_marker_info()
+            # ===================== end of color detection part
 
             results = self.model(img, stream=True)
 
             #sleep(0.1)
 
             for r in results:
+                
+                
                 boxes = r.boxes
 
                 for box in boxes:
@@ -134,7 +134,7 @@ class VisionProcessingNode(Node):
                         last_object_details = {
                             "bounding_box": (x1, y1, x2, y2),
                             "confidence": confidence,
-                            "class_name": self.classNames[int(box.cls[0])]
+                            "class_name": self.CLASS_NAMES[int(box.cls[0])]
                         }
 
                         cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
@@ -144,12 +144,13 @@ class VisionProcessingNode(Node):
                     org = [x1, y1]
                     font = cv2.FONT_HERSHEY_SIMPLEX
                     color = (255, 0, 0)
-                    cv2.putText(img, self.classNames[cls] + " " + str(confidence), org, font, 1, color, 2)
+                    cv2.putText(img, self.CLASS_NAMES[cls] + " " + str(confidence), org, font, 1, color, 2)
+            
+                
+                cv2.imshow('Webcam', img)
 
-            cv2.imshow('Webcam', img)
-
-            if cv2.waitKey(1) == ord('q'):
-                return
+                if cv2.waitKey(1) == ord('q'):
+                    return
 
         except KeyboardInterrupt:
             self.cap.release()
