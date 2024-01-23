@@ -7,6 +7,7 @@ import time
 
 class ArmControllerNode(Node):
     crop_x = 0.0
+    crop_y = 0.0
     crop_type = ""
 
     def __init__(self):
@@ -18,15 +19,16 @@ class ArmControllerNode(Node):
         self.logger = self.get_logger() # Set up logger
 
         # Set up subscribers
-        self.create_service(ArmPosition, 'arm_target_position', self.__update_arm_position, 1)
+        self.create_service(ArmPosition, 'arm_target_position', self.__move_arm, 1)
         
         self.start()
 
     def start(self):
         pass
 
-    def __update_arm_position(self, request, response):
+    def __move_arm(self, request, response):
         self.crop_x = request.crop_x
+        self.crop_y = request.crop_y
         self.crop_type = request.crop_type
 
         # Move arm

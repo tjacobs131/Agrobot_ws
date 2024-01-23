@@ -34,6 +34,7 @@ class ODriveControllerNode(Node):
             self.logger.info("Found odrive, bus voltage: " + str(self.odrv.vbus_voltage))
         except:
             self.odrv = None
+            self.logger.error("Could not find odrive")
 
         self.start()
 

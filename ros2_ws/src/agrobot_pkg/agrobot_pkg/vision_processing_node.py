@@ -7,8 +7,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 from time import sleep
-from agrobot_msgs.msg import VisionPublishClosestCrop
-from agrobot_msgs.srv import UpdateCropLocation
+from agrobot_msgs.msg import CropTypeLocation
 
 class VisionProcessingNode(Node):
 
@@ -29,11 +28,11 @@ class VisionProcessingNode(Node):
         self.__node = rclpy.create_node('vision_processing_node')
 
         # Set up publishers
-        self.crop_publisher = self.create_publisher(VisionPublishClosestCrop, 'detected_crop', 10)
+        self.crop_publisher = self.create_publisher(CropTypeLocation, 'detected_crop', 10)
         self.marker_publisher = self.create_publisher(String, 'detected_marker', 1)
 
         # Set up subscribers
-        self.create_subscription(VisionPublishClosestCrop, 'harvested_crop', self.__ignore_box, 1)
+        self.create_subscription(CropTypeLocation, 'harvested_crop', self.__ignore_box, 1)
         
         self.logger = self.get_logger() # Set up logger
         self.logger.info("Start vision processing")
@@ -80,7 +79,7 @@ class VisionProcessingNode(Node):
 
     def detect_object(self):
         # start webcam
-        self.cap = cv2.VideoCapture(2)
+        self.cap = cv2.VideoCapture("/dev/v4l/by-id/usb-webcamvendor_webcamproduct_00000000-video-index0")
 
         if not self.cap.isOpened():
             self.logger.warn("Cannot open camera")
@@ -155,7 +154,7 @@ class VisionProcessingNode(Node):
 
     def publish_crop_info(self, crop_type, crop_x, crop_y, crop_x2, crop_y2):
         # Create message
-        msg = VisionPublishClosestCrop()
+        msg = CropTypeLocation()
         msg.crop_type = crop_type
         msg.crop_x = crop_x
         msg.crop_y = crop_y

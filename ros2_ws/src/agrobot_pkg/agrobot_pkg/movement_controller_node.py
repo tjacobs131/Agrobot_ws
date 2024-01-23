@@ -6,8 +6,8 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from timeit import default_timer
 from std_msgs.msg import String
-from agrobot_msgs.srv import UpdateCropLocation
-from agrobot_msgs.msg import VisionPublishClosestCrop
+from agrobot_msgs.msg import CropTypeLocation
+from agrobot_msgs.srv import ArmPosition
 
 
 class MovementControllerNode(Node):
@@ -26,10 +26,12 @@ class MovementControllerNode(Node):
     adjustment_speed_braking_force = -0.1
     adjustment_speed_braking_time = 0.5
 
-    target_crop_y = 650 # Position at which the robot should stop (expected crop location)
-    max_crop_y_difference = 5 # Maximum crop position difference to stop at (in pixels)
+    target_crop_y = 650 # Position at which the robot should stop (expected crop location in pixels)
+    max_crop_y_difference = 5 # Maximum crop position difference to stop at in pixels
     adjustment_count_target = 1 # Adjustment iterations to perform
     adjustment_count = 0 # Current adjustment iteration
+
+    crops_collected = 0 # Number of crops collected
 
     serial_com = None
 
@@ -40,9 +42,13 @@ class MovementControllerNode(Node):
 
         # Set up publishers
         self.cmd_vel_pub = self.create_publisher(Twist, "/cmd_vel", 1) # Sends vel commands to the odrive controller
+        self.harvested_crop_pub = self.create_publisher(CropTypeLocation, "harvested_crop", 1) # Sends harvested crop data to the vision processing node
+
+        # Set up services
+        self.arm_cmd_srv = self.create_client(ArmPosition, "arm_target_position") # Sends arm commands to the arm controller
 
         # Set up subscribers
-        self.create_subscription(VisionPublishClosestCrop, 'detected_crop', self.__update_crop, 1)
+        self.create_subscription(CropTypeLocation, 'detected_crop', self.__update_crop, 1)
         self.create_subscription(String, 'detected_marker', self.__update_marker, 1)
         
         # Set up logger
@@ -56,6 +62,9 @@ class MovementControllerNode(Node):
                 self.serial_com = serial.Serial(p.device, 9600, write_timeout=0.5)  
                 self.logger.info("Connected to arduino")
                 break
+
+        if self.serial_com == None:
+            self.logger.error("Arduino not connected")
 
         # Set up loop timers
         # These are necessary to replace while loops
@@ -90,11 +99,10 @@ class MovementControllerNode(Node):
         self.logger.info("Start harvesting")
         self.start_harvesting()
 
-        self.start_delivering()
-
         #
         # TODO: Write code to make robot harvest the planter boxes in column two
         #
+
         # Position self to drive over column two
         # self.start_harvesting()
         # Position self to deliver plants
@@ -116,16 +124,41 @@ class MovementControllerNode(Node):
             self.execute_movement_command(self.adjustment_movement_speed)
 
             if(self.detected_crop.crop_y <= self.target_crop_y):
+                self.harvest_timer.cancel()
                 self.execute_movement_command(0.0)
                 self.logger.info("Crop in position, stopping")
 
-                # diff = abs(self.detected_crop.crop_y - self.target_crop_y)
+                self.wait(1.0)
+
+                # Call gripper service and wait for future to be complete
+                self.logger.info("Calling gripper service")
+                request = ArmPosition.Request()
+                response = ArmPosition.Response()
+                request.crop_x = self.detected_crop.crop_x
+                request.crop_y = self.detected_crop.crop_y
+                request.crop_type = self.detected_crop.crop_type
+                self.future = self.arm_cmd_srv.call_async(request=request, response=response)
+
+                while not response.success or not self.future.done():
+                    self.wait(0.1)
                 
-                # if(diff > self.max_crop_y_difference):
-                #     # Start adjustment loop
-                #     self.adjustment_count = 0
-                #     self.adjustment_timer.reset()
-            
+                if(self.future.result().success):
+                    self.logger.info("Gripper service returned success")
+                    self.harvested_crop_pub.publish(self.detected_crop)
+                else:
+                    self.logger.warning("Gripper service returned failure")
+                    
+
+                self.logger.info("Harvested crops: " + str(self.crops_collected) + "/18")
+                self.harvested_crop_pub.publish(self.detected_crop)
+                self.crops_collected += 1
+
+                if self.crops_collected == 18:
+                    self.logger.info("All crops collected")
+                    self.harvest_timer.cancel()
+                    self.delivery_timer.reset()
+                else:
+                    self.harvest_timer.reset()
 
     def adjust_position(self):
 
@@ -172,18 +205,6 @@ class MovementControllerNode(Node):
 
             # Done adjusting
             self.logger.info("Done adjusting")
-
-            #
-            # TODO: Collect crop
-            #
-
-            # while not result:
-            #     continue
-            #
-            # self.start_harvesting()
-
-    def start_delivering(self):
-        self.delivery_timer.reset()
             
     def deliver_loop(self):
         if self.detected_marker:
