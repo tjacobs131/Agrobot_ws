@@ -77,11 +77,11 @@ class MovementControllerNode(Node):
         # Set up loop timers
         # These are necessary to replace while loops
         # Because while loops cause the node to not update subscriber callbacks
-        self.harvest_timer = self.create_timer(0.5, self.harvest_loop)
+        self.harvest_timer = self.create_timer(0.05, self.harvest_loop)
         self.harvest_timer.cancel()
-        self.adjustment_timer = self.create_timer(1, self.adjust_position)
+        self.adjustment_timer = self.create_timer(0.2, self.adjust_position)
         self.adjustment_timer.cancel()
-        self.delivery_timer = self.create_timer(0.5, self.deliver_loop)
+        self.delivery_timer = self.create_timer(0.1, self.deliver_loop)
         self.delivery_timer.cancel()
 
         self.start() # Start movement script
