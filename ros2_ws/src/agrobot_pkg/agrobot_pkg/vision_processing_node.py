@@ -39,10 +39,10 @@ class VisionProcessingNode(Node):
         self.logger.info("Start vision processing")
 
         # Set up loop timer
-        self.process_frame_timer = self.create_timer(0.1, self.process_frame)
+        self.process_frame_timer = self.create_timer(0.02, self.process_frame)
         self.process_frame_timer.cancel()
 
-        self.detect_object() # Start pathfinding script
+        self.detect_object() # Start detecting
 
         # Function to check if a box overlaps with any saved box
     def is_overlap(self, new_box):
@@ -124,7 +124,7 @@ class VisionProcessingNode(Node):
                 for box in boxes:
                     confidence = math.ceil((box.conf[0] * 100)) / 100
 
-                    if confidence <= 0.60:
+                    if confidence <= 0.50:
                         continue
 
                     x1, y1, x2, y2 = map(int, box.xyxy[0])

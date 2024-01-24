@@ -1,4 +1,5 @@
 import glob
+import time
 import rclpy
 import serial
 import serial.tools.list_ports
@@ -18,18 +19,19 @@ class MovementControllerNode(Node):
 
     calibration_time = 13 # Time to wait before starting (seconds)
     
-    movement_speed = 0.6
-    full_speed_braking_force = -0.2
-    full_speed_braking_time = 1.0
+    movement_speed = 0.8
+    full_speed_braking_force = -0.5
+    full_speed_braking_time = 0.3
 
-    adjustment_movement_speed = 0.3
-    adjustment_speed_braking_force = -0.1
-    adjustment_speed_braking_time = 0.5
+    adjustment_movement_speed = 0.5
+    adjustment_speed_braking_force = -0.5
+    adjustment_speed_braking_time = 0.4
 
-    target_crop_y = 650 # Position at which the robot should stop (expected crop location in pixels)
+    target_crop_y = 240 # Position at which the robot should stop (expected crop location in pixels)
     max_crop_y_difference = 5 # Maximum crop position difference to stop at in pixels
     adjustment_count_target = 1 # Adjustment iterations to perform
     adjustment_count = 0 # Current adjustment iteration
+    harvesting_blind_time = 2.0
 
     crops_collected = 0 # Number of crops collected
     delivery_cycle_count = 0 # Number of delivery cycles completed
@@ -43,6 +45,8 @@ class MovementControllerNode(Node):
 
         # Set up node
         super().__init__('movement_controller_node')
+
+        self.node = rclpy.create_node('movement_controller_node')
 
         # Set up publishers
         self.cmd_vel_pub = self.create_publisher(Twist, "/cmd_vel", 1) # Sends vel commands to the odrive controller
@@ -113,13 +117,15 @@ class MovementControllerNode(Node):
         # self.start_delivering()
 
     def start_harvesting(self):
-
-        # Start moving forward    
-        self.execute_movement_command(self.movement_speed)
         self.detected_crop = None # Remove last detected crop
         self.harvest_timer.reset()
 
     def harvest_loop(self):
+        # Keep moving forward    
+        self.execute_movement_command(self.movement_speed)
+
+        if self.crops_collected % 3 == 0: # If a whole row has been harvested
+            self.wait(self.harvesting_blind_time) # Keep driving, without detecting crops
 
         # If there is no object detected, keep driving
         if self.detected_crop != None:
@@ -135,6 +141,11 @@ class MovementControllerNode(Node):
                 self.wait(self.adjustment_speed_braking_time)
                 self.execute_movement_command(0.0)
 
+                self.wait(0.2)
+                if abs(self.detected_crop - self.target_crop_y) > self.max_crop_y_difference:
+                    self.adjust_position()
+
+
                 # Call gripper service and wait for future to be complete
                 self.logger.info("Calling gripper service")
                 request = ArmPosition.Request()
@@ -142,17 +153,19 @@ class MovementControllerNode(Node):
                 request.crop_x = self.detected_crop.crop_x
                 request.crop_y = self.detected_crop.crop_y
                 request.crop_type = self.detected_crop.crop_type
-                self.future = self.arm_cmd_srv.call_async(request=request, response=response)
+                self.future = self.arm_cmd_srv.call_async(request=request)
 
-                while not response.success or not self.future.done():
-                    self.wait(0.2)
-                
-                if(self.future.result().success):
-                    self.logger.info("Gripper service returned success")
-                    self.harvested_crop_pub.publish(self.detected_crop)
+                result = None
+                while rclpy.ok():
+                    rclpy.spin_once(node=self.node)
+                    if self.future.done():
+                        result = self.future.result()
+                        break
+
+                if self.future.result != None:
+                    self.logger.info("Crop successfully harvested")
                 else:
-                    self.logger.warning("Gripper service returned failure")
-                    
+                    self.logger.warning("An error occured during crop collection")
 
                 self.logger.info("Harvested crops: " + str(self.crops_collected) + "/18")
                 self.harvested_crop_pub.publish(self.detected_crop)
@@ -274,6 +287,7 @@ class MovementControllerNode(Node):
         start_time = default_timer()
         while(True):
             if(default_timer() - start_time > seconds):
+                time.sleep(0.1)
                 break
 
 def main(args=None):
