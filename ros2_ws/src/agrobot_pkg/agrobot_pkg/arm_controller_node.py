@@ -5,25 +5,29 @@ from rclpy.node import Node
 import serial.tools.list_ports
 from agrobot_msgs.srv import ArmPosition
 import time
+from enum import Enum
 
 class ArmControllerNode(Node):
     crop_x = 0.0
     crop_y = 0.0
     crop_type = ""
 
-    z_distance_to_crop = 400
+    z_distance_to_crop = 485
+    z_drop_off_distance = 50
 
     y_approach_distance = 50
 
     gripper_home_rotation = 0
     gripper_back_rotation = 0
     gripper_forward_rotation = 180
-    gripper_drop_off_rotation = 90
+    gripper_drop_off_rotation = 270
     gripper_open = 100
     gripper_closed = 0
 
-    bucket_locations = [50, 100, 150, 200]
+    bucket_locations = [100, 300, 500, 730]
     bucket_crop_types = ["Beetroot", "Carrot", "Lettuce", "Radish"]
+
+    crops_collected = 0
 
     def __init__(self):
         # Set up node
@@ -42,6 +46,7 @@ class ArmControllerNode(Node):
         port = None
         for port in ports:
             if "FTDI" in port.manufacturer:
+                self.logger.info("Connected to arm")
                 port = port.device
                 break
 
@@ -50,53 +55,81 @@ class ArmControllerNode(Node):
         self.start()
 
     def start(self):
-        self.logger.info("Writing to ATMEGA")
+        # # For testing
+        # self.crop_x = 200
+        # self.crop_type = "Beetroot"
+        # self.collect_crop()
+        pass
 
-        self.crop_x = 600 # For testing
+    def collect_crop(self):
+        self.logger.info("Collecting crop")
 
-        # Move arm to home position
-        home_command = self.create_command("$ACH")
-        self.execute_commands([home_command])
+        # Send enable command (because arm sometimes does not respond to the first command)
+        enable_command = self.create_command("$ACE")
+        self.execute_commands([enable_command])
+
+        # # Move arm to home position
+        # z_command = self.create_command("$APZ", 0)
+        # y_command = self.create_command("$APY", 0)
+        # self.execute_commands([z_command, y_command])
+
+        # home_command = self.create_command("$ACH")
+        # self.execute_commands([home_command])
         
         target = self.convert_pixel_to_coordinate(self.crop_x)
-        # Enum to decide later on which side the arm will grab the crop
+        self.logger.info("Target: " + str(target))
+
+        # String to decide later on which side the arm will grab the crop
         # Seen from the perspective of the arm
-        approach_direction = enum('backward', 'forward')
+        approach_direction = "" # "forward" or "backward"
+
         # Adjust on which side the arm will grab the crop
-        if target > 275:
-            approach_direction = approach_direction.forward
+        if target > 220:
+            approach_direction = "forward"
             # crop_x is the left side (back side from the perspective of the gripper) of the bounding box around the crop
-            # we dont need to adjust the target
+            # we only need to adjust a little
+            target -= 25
         else: 
-            approach_direction = approach_direction.backward
+            approach_direction = "backward"
             target += 100 # Vision publishes the top left corner of the bounding box, we need to target the other side
 
         # Move arm to the side of the target crop
         y_command = self.create_command("$APY", target)
         z_command = self.create_command("$APZ", self.z_distance_to_crop)
-        self.execute_commands([y_command, z_command])
+        self.execute_commands([z_command, y_command])
 
         # Rotate gripper
         gripper_rotation_command = None
-        if approach_direction == approach_direction.forward:
+        if approach_direction == "forward":
             gripper_rotation_command = self.create_command("$APA", self.gripper_forward_rotation)
         # Open gripper
         gripper_open_command = self.create_command("$APB", self.gripper_open)
         self.execute_commands([gripper_open_command, gripper_rotation_command])
 
         # Move arm into position
-        if approach_direction == approach_direction.backward:
+        y_command = ""
+        if approach_direction == "backward":
             y_command = self.create_command("$APY", target - self.y_approach_distance)
         else:
             y_command = self.create_command("$APY", target + self.y_approach_distance)
         self.execute_commands([y_command])
 
         # Close gripper
-        gripper_command = self.create_command("$APB", self.gripper_closed)
+        gripper_command = None
+        if self.crop_type == "Lettuce":
+            gripper_command = self.create_command("$APB", 20)
+        else:
+            gripper_command = self.create_command("$APB", 0)
         self.execute_commands([gripper_command])
 
+        # Pull up
+        z_command = self.create_command("$APZ", self.z_distance_to_crop - 100)
+        self.execute_commands([z_command])
+
+        self.wait(1)
+
         # Move gripper above desired bucket
-        z_command = self.create_command("$APZ", 0)
+        z_command = self.create_command("$APZ", self.z_drop_off_distance)
         # y_command depends on the type of crop
         bucket_index = self.bucket_crop_types.index(self.crop_type)
         y_command = self.create_command("$APY", self.bucket_locations[bucket_index])
@@ -106,14 +139,26 @@ class ArmControllerNode(Node):
         gripper_command = self.create_command("$APA", self.gripper_drop_off_rotation)
         self.execute_commands([gripper_command])
 
-        # Open gripper
+        # Open gripper  
         gripper_command = self.create_command("$APB", self.gripper_open)
         self.execute_commands([gripper_command])
 
-        # Rotate gripper back
+        # Move arm back
         gripper_command = self.create_command("$APA", self.gripper_home_rotation)
-        home_command = self.create_command("$ACH")
-        self.execute_commands([gripper_command, home_command])
+        close_gripper_command = self.create_command("$APB", self.gripper_closed)
+        self.execute_commands([gripper_command, close_gripper_command])
+        y_command = self.create_command("$APY", 0)
+        self.execute_commands([y_command])
+
+        # Home
+        if crops_collected == 3:
+            crops_collected = 0
+            home_command = self.create_command("$ACH")
+            self.execute_commands([home_command])
+
+        self.logger.info("Done")
+
+        crops_collected += 1
 
         self.crop_x = None
         self.crop_y = None
@@ -123,7 +168,7 @@ class ArmControllerNode(Node):
         if crop_x < 330:
             return 0
         elif crop_x > 1580:
-            return 825
+            return 775
         else:
             return int((crop_x - 330) * 0.66)
 
@@ -133,28 +178,36 @@ class ArmControllerNode(Node):
 
         command = b''
         if value == None:
-            command = bytes(cmd + "\\r\\n", 'utf-8')
+            command = bytes(cmd + "\r\n", 'utf-8')
         else:
-            value = hex(value).replace("0x", "").upper()
-            command = bytes(cmd + "," + value + "\\r\\n", 'utf-8')
+            value = hex(value)
+            command = bytes(cmd + "," + value + "\r\n", 'utf-8').replace(b'0x', b'')
         
         return command
 
     def execute_commands(self, commands):
         ok_count = 0
+        expected_ok_count = 0
         response = b''
 
         for command in commands:
-            self.atmega.write(command)
-            self.logger.info("Sent command: " + str(command))
+            try:
+                self.wait(0.3)
+                self.atmega.write(command)
+
+                if not b'ACE' in command and not b'ACD' in command: # ACE and ACD commands do not return an OK
+                    expected_ok_count += 1
+
+                self.logger.info("Sent command: " + str(command))
+            except:
+                self.logger.error("Failed to send command: " + str(command))
+                return
             
-        while ok_count < len(commands):
+        while ok_count < expected_ok_count:
             response += self.atmega.read_all().strip()
             if b'$OK' in response:
                 ok_count += 1
                 response = response.replace(b'$OK', b'')
-
-        self.wait(0.1)
 
         self.logger.info("Done exececuting")
 
@@ -168,7 +221,9 @@ class ArmControllerNode(Node):
         self.crop_x = request.crop_x
         self.crop_y = request.crop_y
         self.crop_type = request.crop_type
-        
+
+        self.collect_crop()
+
         response.success = True
         return response
 
