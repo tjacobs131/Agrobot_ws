@@ -176,6 +176,9 @@ class VisionProcessingNode(Node):
         self.marker_publisher.publish(msg)
 
     def __ignore_box(self, object):
+        if self.saved_boxes.count >= 2 :
+            self.saved_boxes = []
+            
         self.logger.info("Ignoring box")
         self.logger.info("Crop x: " + str(object.crop_x))
         self.logger.info("Crop type: " + str(object.crop_type))
