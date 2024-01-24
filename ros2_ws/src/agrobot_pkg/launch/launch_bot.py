@@ -44,6 +44,12 @@ def generate_launch_description():
         executable="vision_processing_node"
     )
 
+    arm_controller = Node(
+        package="agrobot_pkg",
+        name="arm_controller_node",
+        executable="arm_controller_node"
+    )
+
     emergency_stop = ExecuteProcess(
         cmd=[
             'gnome-terminal', '--',
@@ -58,6 +64,7 @@ def generate_launch_description():
         odrive_controller,
         movement_controller,
         vision_controller,
+        arm_controller,
         emergency_stop,
         RegisterEventHandler(
             OnShutdown(

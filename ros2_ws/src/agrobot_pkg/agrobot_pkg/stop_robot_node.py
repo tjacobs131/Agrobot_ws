@@ -2,10 +2,11 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 import curses
+import subprocess
 
 class StopRobotNode(Node):
     def __init__(self, stdscr):
-        super().__init__('stop_robot_node')
+        super().__init__('stop_robot_node')        
         self.publisher = self.create_publisher(Twist, "/cmd_vel", 1)
         self.stdscr = stdscr
         curses.curs_set(0)  # Hide cursor
@@ -39,9 +40,17 @@ class StopRobotNode(Node):
         self.publisher.publish(twist)
 
 def main(stdscr):
+    if is_node_running('stop_robot_node'):
+            raise SystemExit
+
     rclpy.init()
     stop_robot_node = StopRobotNode(stdscr)
     stop_robot_node.start()
 
 def initialize():
     curses.wrapper(main) # Passes terminal reference to main (stdscr)
+    
+
+def is_node_running(node_name):
+    result = subprocess.run(['ros2', 'node', 'list'], stdout=subprocess.PIPE)
+    return node_name in result.stdout.decode('utf-8')
