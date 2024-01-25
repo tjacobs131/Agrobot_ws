@@ -24,7 +24,7 @@ class ArmControllerNode(Node):
     gripper_open = 100
     gripper_closed = 0
 
-    bucket_locations = [100, 300, 500, 730]
+    bucket_locations = [100, 200, 730, 730]
     bucket_crop_types = ["Beetroot", "Carrot", "Lettuce", "Radish"]
 
     crops_collected = 0
@@ -59,6 +59,10 @@ class ArmControllerNode(Node):
         # self.crop_x = 200
         # self.crop_type = "Beetroot"
         # self.collect_crop()
+        
+        disable_command = self.create_command("$ACD")
+        self.execute_commands([disable_command])
+
         pass
 
     def collect_crop(self):
@@ -151,10 +155,12 @@ class ArmControllerNode(Node):
         self.execute_commands([y_command])
 
         # Home
-        if crops_collected == 3:
+        if self.crops_collected == 3:
             crops_collected = 0
             home_command = self.create_command("$ACH")
             self.execute_commands([home_command])
+
+        self.execute_commands([self.create_command("$ACD")]) # Disable
 
         self.logger.info("Done")
 

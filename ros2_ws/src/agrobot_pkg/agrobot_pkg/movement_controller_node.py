@@ -19,15 +19,15 @@ class MovementControllerNode(Node):
 
     calibration_time = 13 # Time to wait before starting (seconds)
     
-    movement_speed = 0.8
-    full_speed_braking_force = -0.5
+    movement_speed = 0.6
+    full_speed_braking_force = -0.4
     full_speed_braking_time = 0.3
 
-    adjustment_movement_speed = 0.5
-    adjustment_speed_braking_force = -0.5
-    adjustment_speed_braking_time = 0.4
+    adjustment_movement_speed = 0.4
+    adjustment_speed_braking_force = -0.2
+    adjustment_speed_braking_time = 0.2
 
-    target_crop_y = 240 # Position at which the robot should stop (expected crop location in pixels)
+    target_crop_y = 20 # Position at which the robot should stop (expected crop location in pixels)
     max_crop_y_difference = 5 # Maximum crop position difference to stop at in pixels
     adjustment_count_target = 1 # Adjustment iterations to perform
     adjustment_count = 0 # Current adjustment iteration
@@ -38,6 +38,9 @@ class MovementControllerNode(Node):
     delivery_open_command = "!1O,3O\n" # Command to open delivery boxes
     delivery_close_command = "!1C,3C\n" # Command to close delivery boxes
     delivery_marker_blind_time = 3.0 # Time to wait before detecting marker again after stopping (seconds)
+
+    moving_slow = False
+    last_command_sent = None
 
     serial_com = None
 
@@ -77,9 +80,9 @@ class MovementControllerNode(Node):
         # Set up loop timers
         # These are necessary to replace while loops
         # Because while loops cause the node to not update subscriber callbacks
-        self.harvest_timer = self.create_timer(0.05, self.harvest_loop)
+        self.harvest_timer = self.create_timer(0.1, self.harvest_loop)
         self.harvest_timer.cancel()
-        self.adjustment_timer = self.create_timer(0.2, self.adjust_position)
+        self.adjustment_timer = self.create_timer(0.4, self.adjust_position)
         self.adjustment_timer.cancel()
         self.delivery_timer = self.create_timer(0.1, self.deliver_loop)
         self.delivery_timer.cancel()
@@ -121,15 +124,17 @@ class MovementControllerNode(Node):
         self.harvest_timer.reset()
 
     def harvest_loop(self):
-        # Keep moving forward    
-        self.execute_movement_command(self.movement_speed)
+        if not self.moving_slow:
+            # Keep moving forward
+            self.execute_movement_command(self.movement_speed)
 
-        if self.crops_collected % 3 == 0: # If a whole row has been harvested
-            self.wait(self.harvesting_blind_time) # Keep driving, without detecting crops
+            if self.crops_collected % 3 == 0: # If a whole row has been harvested
+                self.wait(self.harvesting_blind_time) # Keep driving, without detecting crops
 
         # If there is no object detected, keep driving
         if self.detected_crop != None:
             self.logger.info("Detected crop, slowing down")
+            self.driving_slow = True
             # Slow down
             self.execute_movement_command(self.adjustment_movement_speed)
 
@@ -137,14 +142,15 @@ class MovementControllerNode(Node):
                 self.harvest_timer.cancel()
                 self.logger.info("Crop in position, stopping")
 
-                self.execute_movement_command(self.adjustment_speed_braking_force)
-                self.wait(self.adjustment_speed_braking_time)
+                # self.execute_movement_command(self.adjustment_speed_braking_force)
+                # self.wait(self.adjustment_speed_braking_time)
+
                 self.execute_movement_command(0.0)
 
-                self.wait(0.2)
-                if abs(self.detected_crop - self.target_crop_y) > self.max_crop_y_difference:
-                    self.adjust_position()
 
+                # self.wait(0.2)
+                # if abs(self.detected_crop.crop_y - self.target_crop_y) > self.max_crop_y_difference:
+                #     self.adjust_position()
 
                 # Call gripper service and wait for future to be complete
                 self.logger.info("Calling gripper service")
@@ -170,6 +176,7 @@ class MovementControllerNode(Node):
                 self.logger.info("Harvested crops: " + str(self.crops_collected) + "/18")
                 self.harvested_crop_pub.publish(self.detected_crop)
                 self.crops_collected += 1
+                self.driving_slow = False
 
                 if self.crops_collected == 18:
                     self.logger.info("All crops collected")
@@ -257,9 +264,12 @@ class MovementControllerNode(Node):
                 self.execute_movement_command(self.adjustment_movement_speed)
 
     def execute_movement_command(self, speed):
-        self.move_cmd = Twist()
-        self.move_cmd.linear.x = speed
-        self.cmd_vel_pub.publish(self.move_cmd)
+        if self.last_command_sent != speed:
+            self.logger.info("Sending to odrive: " + str(speed))
+            self.move_cmd = Twist()
+            self.move_cmd.linear.x = speed
+            self.cmd_vel_pub.publish(self.move_cmd)
+            self.last_command_sent = speed
 
     def execute_collection_bucket_command(self, command):
         self.logger.info("Executing arduino command: " + command)

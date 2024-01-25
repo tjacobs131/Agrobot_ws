@@ -39,7 +39,7 @@ class VisionProcessingNode(Node):
         self.logger.info("Start vision processing")
 
         # Set up loop timer
-        self.process_frame_timer = self.create_timer(0.02, self.process_frame)
+        self.process_frame_timer = self.create_timer(0.1, self.process_frame)
         self.process_frame_timer.cancel()
 
         self.detect_object() # Start detecting
@@ -118,13 +118,12 @@ class VisionProcessingNode(Node):
 
             for r in results:
                 
-                
                 boxes = r.boxes
 
                 for box in boxes:
                     confidence = math.ceil((box.conf[0] * 100)) / 100
 
-                    if confidence <= 0.50:
+                    if confidence <= 0.65:
                         continue
 
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
@@ -138,6 +137,7 @@ class VisionProcessingNode(Node):
                         }
 
                         cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+                        self.logger.info("Crop loc: " + str(y1))
                         self.publish_crop_info(crop_type=last_object_details['class_name'], crop_x=x1, crop_y=y1, crop_x2=x2, crop_y2=y2)
 
                     cls = int(box.cls[0])
