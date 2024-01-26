@@ -1,0 +1,3 @@
+The odrive may brick if flashing goes wrong.
+I recommend to not flash the firmware at all if it can be avoided.
+https://discourse.odriverobotics.com/t/no-connect-now-a-brick/7788/2
