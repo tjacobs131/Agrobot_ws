@@ -1,1 +1,1 @@
-In the zip folder is a project for an IDE called Microchip Studio
+The zip contains a github repository with a project for an IDE called Microchip Studio
