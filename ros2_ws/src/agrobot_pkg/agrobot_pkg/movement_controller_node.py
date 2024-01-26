@@ -11,6 +11,12 @@ from agrobot_msgs.msg import CropTypeLocation
 from agrobot_msgs.srv import ArmPosition
 
 
+'''
+The movement controller has timing issues with nodes not detecting crops quickly enough. This can be resolved by writing more efficient nodes that use rclpy.spin_once(node) instead of timers to process subscriber and service callbacks.
+This function updates one callback if it has received a message, making the logic cleaner and easier to work with.
+Alternatively, a stronger computer or multiple computers using the supported ROS2 networking could be used 
+'''
+
 class MovementControllerNode(Node):
 
     lock_detected_crop = False # Locks detected crop data so that the position is not updated unexpectedly
@@ -31,7 +37,7 @@ class MovementControllerNode(Node):
     max_crop_y_difference = 5 # Maximum crop position difference to stop at in pixels
     adjustment_count_target = 1 # Adjustment iterations to perform
     adjustment_count = 0 # Current adjustment iteration
-    harvesting_blind_time = 2.0
+    harvesting_blind_time = 2.0 # Time to wait before detecting crops again after attempting to collect (seconds)
 
     crops_collected = 0 # Number of crops collected
     delivery_cycle_count = 0 # Number of delivery cycles completed
