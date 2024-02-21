@@ -6,6 +6,12 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 import time
 
+#
+# Calibration should not be necessary each time if the odrive and motors stay on on restart
+# Calibration takes a while, especially if you are doing multiple attempts to get the agrobot working
+# At the moment, it calibrates every time the ROS2 system is restarted
+#
+
 class ODriveControllerNode(Node):
     def __init__(self):
         # Set up node
