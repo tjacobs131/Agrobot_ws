@@ -19,7 +19,7 @@ class StopRobotNode(Node):
                 self.stdscr.refresh()
                 key = self.stdscr.getch()
                 if key == ord(' '):
-                    self.get_logger().warning("!!! STOPPING ROBOT !!!\n")
+                    self.get_logger().warning("!!! STOPPING ROBOT !!!\r\n")
                     self.publish_empty_twist()
                 # Add a small delay so we don't consume too much CPU
                 rclpy.spin_once(self, timeout_sec=0.1)
