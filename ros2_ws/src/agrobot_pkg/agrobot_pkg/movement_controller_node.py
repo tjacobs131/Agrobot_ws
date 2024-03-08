@@ -12,9 +12,14 @@ from agrobot_msgs.srv import ArmPosition
 
 
 '''
-The movement controller has timing issues with nodes not detecting crops quickly enough. This can be resolved by writing more efficient nodes that use rclpy.spin_once(node) instead of timers to process subscriber and service callbacks.
-This function updates one callback if it has received a message, making the logic cleaner and easier to work with.
-Alternatively, a stronger computer or multiple computers using the supported ROS2 networking could be used 
+The movement controller has timing issues with nodes not detecting crops quickly enough. 
+
+This can be resolved by writing more efficient nodes that use rclpy.spin_once(node) instead of timers to process subscriber and service callbacks.
+spin_once() updates one callback if it has received a message, making the logic cleaner and easier to work with.
+
+Alternatively, a stronger computer or multiple computers using the supported ROS2 networking could be used
+
+If you are experienced in c++ you could also rewrite some of the most performance dependant nodes in c++
 '''
 
 class MovementControllerNode(Node):
