@@ -11,6 +11,18 @@ from agrobot_msgs.msg import CropTypeLocation
 
 class VisionProcessingNode(Node):
 
+    # We experienced issues detecting plants and colors on the actual competition location.
+    # The crops were very old, so they had a different, washed out, color. 
+
+    # We recommend training the vision model on their crops in their environment,
+    # or buying a complete set of crops which you can use in the competition.
+
+    # The lighting conditions can also be very different than where you are testing.
+    # You either have to test on the competition location beforehand,
+    # or make the vision environment under the robot consistent by enclosing it and using a light source.
+
+    # This script can probably also be significantly optimized, or can be chosen to run seperately (see movement_controller_node comment)
+
     cap = None
     model = None
     CLASS_NAMES = ["Beetroot", "Carrot", "Lettuce", "Radish"]
@@ -44,7 +56,7 @@ class VisionProcessingNode(Node):
 
         self.detect_object() # Start detecting
 
-        # Function to check if a box overlaps with any saved box
+    # Function to check if a box overlaps with any saved box
     def is_overlap(self, new_box):
         x1_new, y1_new, x2_new, y2_new = new_box
         for box in self.saved_boxes:
